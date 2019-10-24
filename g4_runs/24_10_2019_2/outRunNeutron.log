@@ -1,0 +1,1138 @@
+#############  G4DS Log File  #############
+
+------------------------------------------
+                   G4DS                   
+
+     The Dark Side Geant4 Simulator        
+------------------------------------------
+
+
+------------------------------------------
+                   Input                  
+------------------------------------------
+
+#######################################
+#                                     #
+#         Basic G4DS  Macro           #
+#                                     #
+#######################################
+
+# PDG particle codes
+#
+# e-    = 11  
+# e+    = -11 
+# gamma = 22 
+# p     = 2212  
+# n     = 2112
+# alpha = 1000020040
+# mu-   = 13
+
+#  Define the level of verbosity of messages
+# options: debugging, development, trace, routine, warning, error
+# default: routine
+/ds/manager/log trace
+/ds/manager/verbosity 0
+/ds/manager/checkoverlap 0
+/ds/manager/eventcounter 100
+/ds/manager/writephotons 0
+/ds/manager/writedeposits 1
+/ds/manager/writedaughters 0
+
+
+#Detector configuration: TPC+NV+WT (0) - TPC+NW (1) - TPC (2) - NV+WT (3)
+/ds/detector/configuration 0
+
+# Define output file name
+/run/filename outRunNeutron
+
+# Define  random seed
+/run/heprandomseed 12345679
+
+#Define the hadronic physics list (none HP QGSP_BERT_HP QGSP_BIC_HP FTF_BIC_HP FTFP_BERT_HP)
+/ds/physics/hadronic_list HP
+
+#Define the EM physics list (standard livermore)
+/ds/physics/em_list livermore
+
+/ds/physics/killS1S2 1
+
+#-----------------------------------
+/run/initialize
+#-----------------------------------
+/ds/generator/select G4Gun
+
+/ds/generator/particle  neutron
+/ds/generator/direction  0 0 1
+/ds/generator/position   0 0 0 cm
+/ds/generator/energy   100 keV
+
+
+# Define the number of events
+/run/beamOn 10000
+
+
+------------------------------------------
+                   Output                 
+------------------------------------------
+
+Routine:src/DSDetectorConstruction.cc(88):Thu Oct 24 17:01:25 2019
+
+Routine:src/DSManagerMessenger.cc(139): Trace Verbosity: 0
+Routine:src/DSManagerMessenger.cc(103): Check Volume Overlaps: 0
+Routine:src/DSManagerMessenger.cc(130): Event Counter: 100
+Routine:src/DSManagerMessenger.cc(115): Write photons: 0
+Routine:src/DSManagerMessenger.cc(118): Write deposits: 1
+Routine:src/DSManagerMessenger.cc(124): Write daughters: 0
+Routine:src/DSDetectorConstructionMessenger.cc(289):Detector Configuration: 0
+Trace:src/DSRunActionMessenger.cc(133):HepRandom seed set to: 12345679
+Routine:src/DSPhysicsListMessenger.cc(118): Hadronic List: HP
+Routine:src/DSPhysicsListMessenger.cc(123): EM List: livermore
+Routine:src/DSPhysicsListMessenger.cc(138): Kill S1 and S2 Light: 1
+
+########## Detector Geometry ###########
+#-----------------------------#
+# Dark Side Geometry  [mm]    #
+#-----------------------------#
+
+
+WorldSizeX = 20000.
+WorldSizeY = 20000.
+WorldSizeZ = 20000.
+
+DSTankHeight = 12000.
+DSTankRMax = 7000.
+
+# Stainless Steel Sphere
+SSSRadius = 2000.
+
+# Cryostats
+CryostatShiftZ = 368.5
+
+TrunkShiftZ = 170.
+TrunkDiameter = 38.1
+TrunkThickness = 2.
+TrunkTopBottomOffsetZ = 150.
+TrunkTopBottomOffsetX = -38.1
+TrunkBottomHeight = 600.
+TrunkMiddleHeight = 203.2
+TrunkDistToCryostatAxis = 228.6
+
+
+# TPC
+TPCShiftZ = -28.6
+
+TeflonSupportDiameter = 469.9
+TeflonSupportThickness = 19.05
+TeflonSupportHeight = 386.08
+
+PMTAssemblyHeight = 142.24
+TeflonCapDiameter = 469.9
+TeflonCapHeight = 70.61
+
+LArBottomLayerThickness = 0.8
+CathodeWindowDiameter = 424.18
+CathodeWindowHeight = 6.35
+ITOThickness = 0.000015
+
+ReflectorInnerDiameter = 355.6
+ReflectorOuterDiameter = 406.4
+ReflectorHeight = 355.7
+AboveGridInnerDiameter = 358.9
+AboveGridOuterDiameter = 400.05
+AboveGridHeight = 15.03
+GasPocketThickness = 9.37
+TPBThickness = 0.1
+
+DivingBellHeight = 18.42
+DivingBellTopHeight = 3.18
+DivingBellOuterDiameter = 424.18
+DivingBellInnerDiameter = 416.56
+
+FieldRingsHeight = 342.9
+FieldRingsThickness = 4.167
+
+
+# TPC PMTs
+PMTBodyDiameter = 50.29              
+PMTBodyHeight = 122.43                  
+PMTHeadDiameter = 76.2                  
+PMTHeadHeight = 35.04                  
+PMTWallThickness = 0.55                       
+PMTWindowThickness = 3.5866
+PMTSpacing = 82.55
+PMTOffset  = 1
+Routine:src/DSIO.cc(165):Geometry Input File Closed
+Trace:src/DSParameters.cc(209):Detector Geometry loaded
+Trace:src/DSParameters.cc(443):Detector Properties loaded
+Trace:src/DSParameters.cc(456):TPC PMT Q.E. loaded.
+Routine:src/DSIO.cc(298):Cryostat Profile Input File Closed
+Routine:src/DSParameters.cc(213):Reading LSV PMT Geometry from file: 
+
+########## Veto PMT Positions ###########
+Routine:src/DSParameters.cc(223):Reading LSV PMT Geometry for DS-50 
+0, pmt 0	theta = 6.04757	phi = 1.74533
+1, pmt 1	theta = 1.1781	phi = 2.0944
+2, pmt 2	theta = 4.47851	phi = 0.698132
+3, pmt 3	theta = 4.16261	phi = 1.39626
+4, pmt 4	theta = 3.22013	phi = 2.44346
+5, pmt 5	theta = 3.90081	phi = 1.0472
+6, pmt 6	theta = 3.48193	phi = 1.0472
+7, pmt 7	theta = 4.31969	phi = 1.0472
+8, pmt 8	theta = 3.22013	phi = 1.39626
+9, pmt 9	theta = 0.813323	phi = 0.698132
+10, pmt 10	theta = 3.53429	phi = 1.74533
+11, pmt 11	theta = 3.22013	phi = 1.74533
+12, pmt 12	theta = 3.95492	phi = 0.698132
+13, pmt 13	theta = 0.968658	phi = 1.0472
+14, pmt 14	theta = 0.392699	phi = 1.39626
+15, pmt 15	theta = 0.785398	phi = 0.349066
+16, pmt 16	theta = 6.28319	phi = 0.349066
+17, pmt 17	theta = 1.02102	phi = 1.39626
+18, pmt 18	theta = 0.0785398	phi = 1.39626
+19, pmt 19	theta = 0.549779	phi = 1.0472
+20, pmt 20	theta = 1.9635	phi = 1.74533
+21, pmt 21	theta = 5.49779	phi = 0.349066
+22, pmt 22	theta = 6.04757	phi = 1.39626
+23, pmt 23	theta = 5.10509	phi = 1.39626
+24, pmt 24	theta = 3.84845	phi = 1.39626
+25, pmt 25	theta = 5.00211	phi = 0.698132
+26, pmt 26	theta = 4.47677	phi = 1.39626
+27, pmt 27	theta = 4.79093	phi = 1.39626
+28, pmt 28	theta = 2.27765	phi = 1.74533
+29, pmt 29	theta = 4.73857	phi = 1.0472
+30, pmt 30	theta = 2.43473	phi = 2.0944
+31, pmt 31	theta = 5.15745	phi = 1.0472
+32, pmt 32	theta = 0.289725	phi = 0.698132
+33, pmt 33	theta = 5.78577	phi = 2.0944
+34, pmt 34	theta = 5.41925	phi = 1.74533
+35, pmt 36	theta = 2.17293	phi = 2.44346
+36, pmt 37	theta = 0.706858	phi = 1.39626
+37, pmt 38	theta = 0.340339	phi = 2.0944
+38, pmt 39	theta = 2.90597	phi = 1.39626
+39, pmt 40	theta = 5.73341	phi = 1.74533
+40, pmt 41	theta = 5.52571	phi = 0.698132
+41, pmt 42	theta = 3.27249	phi = 2.0944
+42, pmt 43	theta = 4.71239	phi = 0.349066
+43, pmt 44	theta = 6.04931	phi = 0.698132
+44, pmt 45	theta = 5.99521	phi = 1.0472
+45, pmt 46	theta = 5.41925	phi = 1.39626
+46, pmt 47	theta = 1.64934	phi = 2.44346
+47, pmt 48	theta = 2.38412	phi = 0.698132
+48, pmt 49	theta = 3.92699	phi = 0.349066
+49, pmt 50	theta = 0.1309	phi = 1.0472
+50, pmt 51	theta = 5.73341	phi = 1.39626
+51, pmt 52	theta = 1.9635	phi = 1.3962
+52, pmt 53	theta = 2.64417	phi = 1.04726
+53, pmt 54	theta = 3.53429	phi = 1.39626
+54, pmt 55	theta = 5.57633	phi = 1.0472
+55, pmt 64	theta = 1.38754	phi = 1.0472
+56, pmt 65	theta = 2.35619	phi = 0.349066
+57, pmt 66	theta = 1.86052	phi = 0.698132
+58, pmt 67	theta = 1.64934	phi = 1.39626
+59, pmt 68	theta = 1.5708	phi = 0.349066
+60, pmt 69	theta = 0.785398	phi = 2.79253
+61, pmt 70	theta = 1.80642	phi = 1.0472
+62, pmt 71	theta = 1.33518	phi = 1.39626
+63, pmt 72	theta = 5.36689	phi = 2.0944
+64, pmt 73	theta = 1.33518	phi = 1.74533
+65, pmt 74	theta = 5.83813	phi = 2.44346
+66, pmt 75	theta = 0.706858	phi = 1.74533
+67, pmt 76	theta = 0.0785398	phi = 1.74533
+68, pmt 77	theta = 6.20465	phi = 2.0944
+69, pmt 78	theta = 0.602139	phi = 2.44346
+70, pmt 80	theta = 2.69653	phi = 2.44346
+71, pmt 81	theta = 2.01586	phi = 2.0944
+72, pmt 82	theta = 1.64934	phi = 1.74533
+73, pmt 83	theta = 1.59698	phi = 2.0944
+74, pmt 84	theta = 0.759218	phi = 2.0944
+75, pmt 85	theta = 0.0785398	phi = 2.44346
+76, pmt 86	theta = 1.12574	phi = 2.44346
+77, pmt 87	theta = 1.02102	phi = 1.74533
+78, pmt 88	theta = 4.71239	phi = 2.79253
+79, pmt 89	theta = 2.59181	phi = 1.74533
+80, pmt 90	theta = 0.392699	phi = 1.74533
+81, pmt 91	theta = 2.35619	phi = 2.79253
+82, pmt 92	theta = 2.85361	phi = 2.0944
+83, pmt 93	theta = 2.90597	phi = 1.74533
+84, pmt 94	theta = 6.28319	phi = 2.79253
+85, pmt 95	theta = 3.14159	phi = 2.79253
+86, pmt 96	theta = 1.5708	phi = 2.79253
+87, pmt 97	theta = 3.84845	phi = 1.74533
+88, pmt 98	theta = 3.74373	phi = 2.44346
+89, pmt 99	theta = 3.69137	phi = 2.0944
+90, pmt 100	theta = 5.31453	phi = 2.44346
+91, pmt 101	theta = 4.52913	phi = 2.0944
+92, pmt 102	theta = 3.92699	phi = 2.79253
+93, pmt 103	theta = 4.11025	phi = 2.0944
+94, pmt 104	theta = 5.49779	phi = 2.79253
+95, pmt 105	theta = 4.79093	phi = 2.44346
+96, pmt 106	theta = 4.47677	phi = 1.74533
+97, pmt 107	theta = 4.94801	phi = 2.0944
+98, pmt 108	theta = 5.10509	phi = 1.74533
+99, pmt 109	theta = 4.16261	phi = 1.74533
+100, pmt 110	theta = 4.79093	phi = 1.74533
+101, pmt 111	theta = 4.26733	phi = 2.44346
+102, pmt 112	theta = 2.27765	phi = 1.39626
+103, pmt 113	theta = 3.43132	phi = 0.698132
+104, pmt 114	theta = 2.90772	phi = 0.698132
+105, pmt 115	theta = 2.59181	phi = 1.39626
+106, pmt 116	theta = 2.22529	phi = 1.0472
+107, pmt 117	theta = 3.14159	phi = 0.349066
+108, pmt 118	theta = 1.33692	phi = 0.698132
+109, pmt 119	theta = 3.06305	phi = 1.0472
+Routine:src/DSIO.cc(274):Veto PMT Geometry Input File Closed
+########## LSV Optics  ###########
+# ----------------------------#
+# DS LSV Optics               #
+#-----------------------------#
+
+# LS scintillation yield (in units /MeV) is untuned.
+ScintillationYield	= 18500
+
+# LS Birks factors (in units cm/MeV) from Borexino PRD (2014)
+BirksBeta		= 0.0109
+Trace:src/DSParameters.cc(545): LS Birks Constant for Betas: 0.0109 cm/MeV
+BirksAlpha		= 0.0218
+Trace:src/DSParameters.cc(549): LS Birks Constant for Alphas: 0.0218 cm/MeV
+BirksProton		= 0.0109
+Trace:src/DSParameters.cc(553): LS Birks Constant for Protons: 0.0109 cm/MeV
+
+# LS Resolution Scale set to 1 (Gaussian with sigma = sqrt)
+ResolutionScale		= 1.0
+
+# Scintillation times (in ns) and weight from Borexino
+# used if /ds/physics/LSoptics 2 in the mac file
+BetaScintTime1		= 3.7
+BetaScintTime2		= 24
+BetaScintTime3		= 60
+BetaScintTime4		= 600
+BetaScintWeight1	= 0.889
+BetaScintWeight2	= 0.055
+BetaScintWeight3	= 0.027
+BetaScintWeight4	= 0.029
+AlphaScintTime1		= 3.9
+AlphaScintTime2		= 26.
+AlphaScintTime3		= 110.
+AlphaScintTime4		= 630.
+AlphaScintWeight1	= 0.674 
+AlphaScintWeight2	= 0.146
+AlphaScintWeight3	= 0.103
+AlphaScintWeight4	= 0.077
+
+# LS Fast and Slow time constant (in ns) from Borexino
+# used if /ds/physics/LSoptics 1 in the mac file
+FastTime		= 2.0
+SlowTime		= 17.61
+# LS Yield Ratio: ratio between Fast and Slow scintillation from Borexino
+# used if /ds/physics/LSoptics 1 in the mac file
+YieldRatio		= 0.93
+
+# LS WLS (PPO) time constant (in ns) and efficiency from Borexino
+WLSTime			= 1.8
+WLSEfficiency		= 0.8
+
+# Lumirror
+LumirrorEff 		= 0.
+LumirrorSpecLobe 	= 0.
+LumirrorSpecSpike 	= 0.
+LumirrorBackscat 	= 0.
+LumirrorRindex 		= 1.
+
+# Electropolished Stainless Steel (TPC outer cryostat surface)
+EpssRefl 		= 0.58
+EpssEff 		= 0.
+EpssSpecLobe 		= 0.65
+EpssSpecSpike 		= 0.
+EpssBackscat 		= 0.
+EpssRindex 		= 1.
+
+# PhotoCathode
+#CathodeRefl 		= 0.2
+VCathodeRefl 		= 0.1
+VCathodeEff 		= 0.
+VCathodeSpecLobe 	= 1.
+VCathodeSpecSpike 	= 0.
+VCathodeBackscat 	= 0.
+VCathodeRindex 		= 1.
+
+# PMT Back
+PMTBackRefl 		= 0.78
+PMTBackEff 		= 0.
+PMTBackSpecLobe 	= 1.
+PMTBackSpecSpike 	= 0.0
+PMTBackBackscat 	= 0.
+PMTBackRindex 		= 1.
+
+# Untreated Stainless Steel (flange surface)
+UnssRefl 		= 0.48
+UnssEff 		= 0.
+UnssSpecLobe 		= 0.65
+UnssSpecSpike 		= 0.0
+UnssBackscat 		= 0.
+UnssRindex 		= 1.
+Routine:src/DSIO.cc(210):LSV Optics Input File Closed
+Routine:src/DSIO.cc(351):PC Attenuation Length Input File Closed
+Routine:src/DSIO.cc(372):PPO Attenuation Length Input File Closed
+Routine:src/DSIO.cc(393):TMB Attenuation Length Input File Closed
+Routine:src/DSIO.cc(329):PC Refraction Index Input File Closed
+Routine:src/DSIO.cc(415):Lumirror Reflectivity Input File Closed
+Routine:src/DSIO.cc(436):DS50 Veto PMT Quantum Efficiency Input File Closed
+Routine:src/DSParameters.cc(835):LSV Optics Properties loaded
+
+########## Detector Optics Tuning ###########
+  
+# -----------------------------#
+# Dark Side Optics            #
+#-----------------------------#
+#  
+# UV flag: wavelength < 150 nm
+# Vis flag: wavelength > 150 nm
+#
+#-----------------------------#
+# Refraction Indexes
+
+#factor w/r to LArRindex (!= 1. only if WithNewGridModel is 0)
+GridSteelRindScale    = 1.
+
+#absolute
+PhotocathodeUVRind    = 1.47		#1.47 old values before update from Paolo, to use at Manchester Optics 
+PhotocathodeVisRind   = 1.22		#1.47
+FusedSilicaUVRind     = 1.47
+FusedSilicaVisRind    = 1.47
+TPBUVRind             = 1.47		#1.5
+TPBVisRind            = 1.22		#1.5
+GArRindexScale        = 1.074
+PArRind               = 1.27
+
+
+#-----------------------------#
+# Absorption Lengths   [m]
+
+GaseousArgonUVAbs    = 100.
+GaseousArgonVisAbs   = 100.		
+LiquidArgonUVAbs     = 10.		#1.6
+LiquidArgonVisAbs    = 10.		#100.
+# myGrid_h/2 = 0.00005 m
+GridSteelUVAbs       = 1000.  # PDM: Made longer -- abs len not used.
+GridSteelVisAbs      = 1000.  # PDM: Made longer -- abs len not used.
+FusedSilicaUVAbs     = 0.0000001
+FusedSilicaVisAbs    = 100.
+TPBUVAbs             = 1000		#1000.
+TPBVisAbs            = 1000		#1000.
+
+#-----------------------------#
+# Other WLS Properties
+
+WLSAbsorptionFactor   = 0.04
+#the above parameter is different from std TPB absrption length
+WLSMeanNumberPhotons  = 1.
+WLSTimeConstant_ns    = 1.5
+WLSEfficiency         = 1.
+
+#-----------------------------#
+# Rayligh scattering scaling factors
+
+LArRayleighScale      = 0.8
+
+#-----------------------------#
+# Rayligh scattering length [m]
+
+FSilicaRaylVisLength  = 100.
+FSilicaRaylUVLength   = 1.
+
+#-----------------------------#
+# Placements (booleans)
+
+WithITO               = 1
+WithGasPocket         = 1
+WithNewGridModel      = 1
+WithDefect            = 0 # CZ: Add TPB defect.
+WithSaggingModel      = 0 # CZ: When it is set to 1, use the model. Otherwise, use the parameters in s2_radial_correction.dat (may double count geometrical effect).
+GridNormalTransparency = 0.9506 # Actual grid transparency at normal incidence
+
+#-----------------------------#
+# Surfaces (parameters)
+# Ref = Geant4 reflectivity is actually (1 - absorption)
+# transittance and reflection are then driven by RINDEXs
+
+LArGridUVRef        = .1  # PDM: Grid steel, extrapolated from meas @>250 nm
+LArGridVisRef       = 0.5  # PDM: Grid steel, measured @ Princeton by G. Koh.  PDM X-26
+TeflonTPBUVRef      = .075
+TeflonTPBVisRef     = 0.98
+PMTLArUVRef         = .2
+PMTLArVisRef        = .2
+TeflonLArUVRef      = .075
+TeflonLArVisRef     = .98
+ArTPBVisTran        = 0.6
+
+Routine:src/DSIO.cc(188):Optics Input File Closed
+Trace:src/DSParameters.cc(422):#######    Detector Optics loaded      #######
+Routine:src/DSMaterial.cc(1587):PC: 0
+Routine:src/DSMaterial.cc(1587):TMB: 1
+Routine:src/DSMaterial.cc(1587):BoronScintillator: 2
+Routine:src/DSMaterial.cc(1587):Air: 3
+Routine:src/DSMaterial.cc(1587):Vacuum: 4
+Routine:src/DSMaterial.cc(1587):PPO: 5
+Routine:src/DSMaterial.cc(1587):DMP: 6
+Routine:src/DSMaterial.cc(1587):Acrylic: 7
+Routine:src/DSMaterial.cc(1587):LiquidArgon: 8
+Routine:src/DSMaterial.cc(1587):PseudoArgon: 9
+Routine:src/DSMaterial.cc(1587):NSLiquidArgon: 10
+Routine:src/DSMaterial.cc(1587):GaseousArgon: 11
+Routine:src/DSMaterial.cc(1587):LiquidXenon: 12
+Routine:src/DSMaterial.cc(1587):GaseousXenon: 13
+Routine:src/DSMaterial.cc(1587):Steel: 14
+Routine:src/DSMaterial.cc(1587):StainlessSteel: 15
+Routine:src/DSMaterial.cc(1587):GridSteel: 16
+Routine:src/DSMaterial.cc(1587):Water: 17
+Routine:src/DSMaterial.cc(1587):MetalLead: 18
+Routine:src/DSMaterial.cc(1587):Teflon: 19
+Routine:src/DSMaterial.cc(1587):Rock: 20
+Routine:src/DSMaterial.cc(1587):Norite: 21
+Routine:src/DSMaterial.cc(1587):HDPE: 22
+Routine:src/DSMaterial.cc(1587):Styrofoam: 23
+Routine:src/DSMaterial.cc(1587):MetalCopper: 24
+Routine:src/DSMaterial.cc(1587):MetalCopperCryo: 25
+Routine:src/DSMaterial.cc(1587):MetalTitanium: 26
+Routine:src/DSMaterial.cc(1587):ShipSteel: 27
+Routine:src/DSMaterial.cc(1587):TPB: 28
+Routine:src/DSMaterial.cc(1587):ThreeMFoil: 29
+Routine:src/DSMaterial.cc(1587):FusedSilica: 30
+Routine:src/DSMaterial.cc(1587):SodiumIodide: 31
+Routine:src/DSMaterial.cc(1587):ITO: 32
+Routine:src/DSMaterial.cc(1587):LiquidNitrogen: 33
+Routine:src/DSMaterial.cc(1587):GaseousNitrogen: 34
+Routine:src/DSMaterial.cc(1587):Kovar: 35
+Routine:src/DSMaterial.cc(1587):Bialkali: 36
+Routine:src/DSMaterial.cc(1587):Kapton: 37
+Routine:src/DSMaterial.cc(1587):Concrete: 38
+Routine:src/DSMaterial.cc(1587):Aluminum: 39
+Routine:src/DSMaterial.cc(1587):Glass: 40
+Routine:src/DSMaterial.cc(1587):Nylon: 41
+Routine:src/DSMaterial.cc(1587):NylonL: 42
+Routine:src/DSMaterial.cc(1587):Bialkali: 43
+Routine:src/DSMaterial.cc(1587):Paint: 44
+Routine:src/DSMaterial.cc(1587):BorexScintillator: 45
+Routine:src/DSMaterial.cc(1587):BorexScintillator1: 46
+Routine:src/DSMaterial.cc(1587):BorexScintillator2: 47
+Routine:src/DSMaterial.cc(1587):DMPbuffer: 48
+Routine:src/DSMaterial.cc(1587):Quartz: 49
+Routine:src/DSMaterial.cc(1587):Beryllium: 50
+Routine:src/DSMaterial.cc(1587):Derlin: 51
+Routine:src/DSMaterial.cc(1587):BlackHole: 52
+Routine:src/DSMaterial.cc(1587):fGdOxide: 53
+Routine:src/DSMaterial.cc(1587):GdScintillator: 54
+Routine:src/DSMaterial.cc(1587):GdWater: 55
+Routine:src/DSMaterial.cc(1587):MetalSilicon: 56
+Routine:src/DSMaterial.cc(1587):BoroSilicateGlass: 57
+Routine:src/DSMaterial.cc(1587):FakePhotocathode: 58
+Routine:src/DSMaterial.cc(1587):ClLi: 59
+Routine:src/DSMaterial.cc(1587):NatClLi: 60
+Routine:src/DSMaterial.cc(1587):OrtoCarb: 61
+Routine:src/DSMaterial.cc(1587):Li6Scintillator: 62
+Routine:src/DSMaterial.cc(1587):NatLi6Scintillator: 63
+Routine:src/DSMaterial.cc(1587):OrtoCarbScintillator: 64
+Routine:src/DSMaterial.cc(1587):GdAcrylic: 65
+Routine:src/DSMaterial.cc(1587):VetoLiquidArgon2: 66
+Routine:src/DSMaterial.cc(1587):Naphthalene: 67
+Routine:src/DSMaterial.cc(1587):Altustipe: 68
+Routine:src/DSMaterial.cc(1587):BC454: 69
+Routine:src/DSMaterial.cc(1587):PlyWood: 70
+Routine:src/DSMaterial.cc(1587):InsulatingFoam: 71
+Routine:src/DSMaterial.cc(1587):VetoLiquidArgon1: 72
+Routine:src/DSMaterial.cc(1587):AcrylicDART: 73
+Routine:src/DSMaterial.cc(1587):VetoPScint: 74
+Routine:src/DSMaterial.cc(1587):Methane: 75
+Routine:src/DSMaterial.cc(1587):VetoMixture: 76
+Routine:src/DSMaterial.cc(1587):XeLiquidArgon: 77
+Routine:src/DSMaterial.cc(1587):Invar: 78
+Routine:src/DSMaterial.cc(1587):Arlon: 79
+Routine:src/DSDetectorConstruction.cc(136): Detector Configuration - TPC+NV+WT: 0
+Routine:src/DSDetectorWaterTank.cc(20): Constructing WaterTank Geometry
+Routine:src/DSDetectorNeutronVeto.cc(23): Constructing NeutronVeto Geometry
+Routine:src/DSDetectorNeutronVeto.cc(38):SteelVessel = 10000
+Routine:src/DSDetectorNeutronVeto.cc(43):Borate Scintillator in the DS20k neutron veto
+Routine:src/DSDetectorNeutronVeto.cc(72):BoronScintillatorVolume = 10001
+Routine:src/DSDetectorPMTNeutronVeto.cc(22): Constructing PMTNeutronVeto Geometry
+Routine:src/DSDetectorNeutronVeto.cc(125):TopFlangeVolume = 10002
+Routine:src/DSDetectorDS50.cc(82): Constructing DS50 Geometry
+Routine:src/DSIO.cc(298):Cryostat Profile Input File Closed
+Routine:src/DSDetectorPMTDS50.cc(36): Constructing Top TPC PMTs Geometry  
+Routine:src/DSDetectorPMTDS50.cc(38): Constructing Bottom TPC PMTs Geometry  
+Routine:src/DSPhysicsList.cc(183):Livermore EM Physics List Active
+Routine:src/DSLight3.cc(511): MeanQuantaEnergy: 1.95e-05
+Routine:src/DSLight3.cc(515): S1ScaleFactor: 0.94116
+Routine:src/DSLight3.cc(519): S2Yield: 273.2
+Routine:src/DSLight3.cc(531): LindhardFactor: 0.25
+Routine:src/DSLight3.cc(523): ExcitationRatioER: 0.21
+Routine:src/DSLight3.cc(527): ExcitationRatioNR: 1
+Routine:src/DSLight3.cc(535): PhotonEneMean: 9.69e-06
+Routine:src/DSLight3.cc(539): PhotonEneWidth: 2.2e-07
+Routine:src/DSLight3.cc(543): D_T: 4.8e-07
+Routine:src/DSLight3.cc(547): D_L: 1.8e-06
+Routine:src/DSLight3.cc(551): TauFast: 6
+Routine:src/DSLight3.cc(555): TauSlow: 1600
+Routine:src/DSLight3.cc(559): TauReco: 0.8
+Routine:src/DSLight3.cc(563): TaueLAr: 1.58e+07
+Routine:src/DSLight3.cc(511): MeanQuantaEnergy: 1.95e-05
+Routine:src/DSLight3.cc(515): S1ScaleFactor: 0.94116
+Routine:src/DSLight3.cc(519): S2Yield: 273.2
+Routine:src/DSLight3.cc(531): LindhardFactor: 0.25
+Routine:src/DSLight3.cc(523): ExcitationRatioER: 0.21
+Routine:src/DSLight3.cc(527): ExcitationRatioNR: 1
+Routine:src/DSLight3.cc(535): PhotonEneMean: 9.69e-06
+Routine:src/DSLight3.cc(539): PhotonEneWidth: 2.2e-07
+Routine:src/DSLight3.cc(543): D_T: 4.8e-07
+Routine:src/DSLight3.cc(547): D_L: 1.8e-06
+Routine:src/DSLight3.cc(551): TauFast: 6
+Routine:src/DSLight3.cc(555): TauSlow: 1600
+Routine:src/DSLight3.cc(559): TauReco: 0.8
+Routine:src/DSLight3.cc(563): TaueLAr: 1.58e+07
+Routine:src/DSLight3.cc(511): MeanQuantaEnergy: 1.95e-05
+Routine:src/DSLight3.cc(515): S1ScaleFactor: 0.94116
+Routine:src/DSLight3.cc(519): S2Yield: 273.2
+Routine:src/DSLight3.cc(531): LindhardFactor: 0.25
+Routine:src/DSLight3.cc(523): ExcitationRatioER: 0.21
+Routine:src/DSLight3.cc(527): ExcitationRatioNR: 1
+Routine:src/DSLight3.cc(535): PhotonEneMean: 9.69e-06
+Routine:src/DSLight3.cc(539): PhotonEneWidth: 2.2e-07
+Routine:src/DSLight3.cc(543): D_T: 4.8e-07
+Routine:src/DSLight3.cc(547): D_L: 1.8e-06
+Routine:src/DSLight3.cc(551): TauFast: 6
+Routine:src/DSLight3.cc(555): TauSlow: 1600
+Routine:src/DSLight3.cc(559): TauReco: 0.8
+Routine:src/DSLight3.cc(563): TaueLAr: 1.58e+07
+Routine:src/DSPhysicsList.cc(208):Ion Physics List Active
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 1091 ; Process Name: Transportation
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 2010 ; Process Name: msc
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 2002 ; Process Name: hIoni
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 2008 ; Process Name: nuclearStopping
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 8999 ; Process Name: DSLight3
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 6201 ; Process Name: Decay
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 6210 ; Process Name: RadioactiveDecay
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 4121 ; Process Name: ionInelastic
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 1999 ; Process Name: DSLScintillation
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 4111 ; Process Name: hadElastic
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 2003 ; Process Name: hBrems
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 2004 ; Process Name: hPairProd
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 4151 ; Process Name: hFritiofCaptureAtRest
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 2005 ; Process Name: annihil
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 2001 ; Process Name: CoulombScat
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 2012 ; Process Name: phot
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 2013 ; Process Name: compt
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 2014 ; Process Name: conv
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 2011 ; Process Name: Rayl
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 4131 ; Process Name: nCapture
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 3031 ; Process Name: OpAbsorption
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 3033 ; Process Name: OpRayleigh
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 3034 ; Process Name: OpWLS
+Routine:src/DSPhysicsList.cc(1115): Process Map Table - Index: 3032 ; Process Name: OpBoundary
+Routine:src/DSPhysicsList.cc(1053): Default Physics Cut Set to 0.1 cm 
+Routine:src/DSPrimaryGeneratorActionMessenger.cc(64):Generator: G4Gun
+Routine:src/DSGeneratorG4Gun.cc(33):G4ParticleGun Constructed.
+Routine:src/DSRunAction.cc(82):********************
+Routine:src/DSRunAction.cc(83):*** AUTOSEED OFF ***
+Routine:src/DSRunAction.cc(84):********************
+Routine:src/DSRunAction.cc(100):Random seed: 12345679
+Routine:src/DSRunAction.cc(112):Initialized Binary File: outRunNeutron.fil
+Routine:src/DSEventAction.cc(134):>>> Event 0;  NPE = 228;  NPE/event = 228;  CPUTime/event = 0 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 100;  NPE = 179;  NPE/event = 417.18;  CPUTime/event = 0.2355 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 200;  NPE = 206;  NPE/event = 441.63;  CPUTime/event = 0.2705 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 300;  NPE = 146;  NPE/event = 326.89;  CPUTime/event = 0.1946 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 400;  NPE = 197;  NPE/event = 219.66;  CPUTime/event = 0.1382 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 500;  NPE = 227;  NPE/event = 329.61;  CPUTime/event = 0.1965 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 600;  NPE = 188;  NPE/event = 318.91;  CPUTime/event = 0.1716 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 700;  NPE = 20;  NPE/event = 252.78;  CPUTime/event = 0.1517 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 800;  NPE = 839;  NPE/event = 422.88;  CPUTime/event = 0.2346 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 900;  NPE = 260;  NPE/event = 367.52;  CPUTime/event = 0.1994 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 1000;  NPE = 20;  NPE/event = 267.85;  CPUTime/event = 0.1598 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 1100;  NPE = 9;  NPE/event = 189.03;  CPUTime/event = 0.1109 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 1200;  NPE = 1106;  NPE/event = 240.93;  CPUTime/event = 0.14 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 1300;  NPE = 242;  NPE/event = 360.74;  CPUTime/event = 0.2017 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 1400;  NPE = 215;  NPE/event = 330.67;  CPUTime/event = 0.1883 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 1500;  NPE = 165;  NPE/event = 329.67;  CPUTime/event = 0.1823 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 1600;  NPE = 29;  NPE/event = 477.45;  CPUTime/event = 0.2832 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 1700;  NPE = 206;  NPE/event = 302.09;  CPUTime/event = 0.1892 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 1800;  NPE = 1042;  NPE/event = 450.16;  CPUTime/event = 0.2495 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 1900;  NPE = 138;  NPE/event = 396.36;  CPUTime/event = 0.2386 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 2000;  NPE = 139;  NPE/event = 348.78;  CPUTime/event = 0.2127 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 2100;  NPE = 50;  NPE/event = 390.05;  CPUTime/event = 0.2215 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 2200;  NPE = 24;  NPE/event = 231.81;  CPUTime/event = 0.1425 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 2300;  NPE = 176;  NPE/event = 208.19;  CPUTime/event = 0.1264 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 2400;  NPE = 208;  NPE/event = 394.89;  CPUTime/event = 0.2116 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 2500;  NPE = 232;  NPE/event = 355.13;  CPUTime/event = 0.1905 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 2600;  NPE = 219;  NPE/event = 488.54;  CPUTime/event = 0.268 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 2700;  NPE = 215;  NPE/event = 349.84;  CPUTime/event = 0.1968 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 2800;  NPE = 0;  NPE/event = 355.7;  CPUTime/event = 0.1984 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 2900;  NPE = 231;  NPE/event = 395.23;  CPUTime/event = 0.2107 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 3000;  NPE = 144;  NPE/event = 433.42;  CPUTime/event = 0.2279 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 3100;  NPE = 224;  NPE/event = 315.69;  CPUTime/event = 0.1942 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 3200;  NPE = 247;  NPE/event = 387.56;  CPUTime/event = 0.2198 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 3300;  NPE = 221;  NPE/event = 307.5;  CPUTime/event = 0.1812 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 3400;  NPE = 27;  NPE/event = 397.86;  CPUTime/event = 0.2283 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 3500;  NPE = 257;  NPE/event = 354.94;  CPUTime/event = 0.2065 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 3600;  NPE = 222;  NPE/event = 276.29;  CPUTime/event = 0.1635 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 3700;  NPE = 227;  NPE/event = 420.82;  CPUTime/event = 0.2386 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 3800;  NPE = 252;  NPE/event = 273.75;  CPUTime/event = 0.1554 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 3900;  NPE = 238;  NPE/event = 216.7;  CPUTime/event = 0.1307 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 4000;  NPE = 162;  NPE/event = 456.64;  CPUTime/event = 0.264 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 4100;  NPE = 18;  NPE/event = 383.92;  CPUTime/event = 0.2327 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 4200;  NPE = 277;  NPE/event = 250.54;  CPUTime/event = 0.163 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 4300;  NPE = 253;  NPE/event = 365.69;  CPUTime/event = 0.2062 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 4400;  NPE = 4351;  NPE/event = 249.55;  CPUTime/event = 0.1532 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 4500;  NPE = 189;  NPE/event = 433.64;  CPUTime/event = 0.251 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 4600;  NPE = 1952;  NPE/event = 273.85;  CPUTime/event = 0.1539 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 4700;  NPE = 21;  NPE/event = 552.36;  CPUTime/event = 0.2853 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 4800;  NPE = 33;  NPE/event = 325.57;  CPUTime/event = 0.1815 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 4900;  NPE = 148;  NPE/event = 325.32;  CPUTime/event = 0.1789 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 5000;  NPE = 14;  NPE/event = 348.95;  CPUTime/event = 0.1963 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 5100;  NPE = 22;  NPE/event = 323.51;  CPUTime/event = 0.1716 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 5200;  NPE = 3599;  NPE/event = 519.25;  CPUTime/event = 0.3112 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 5300;  NPE = 1041;  NPE/event = 569.88;  CPUTime/event = 0.3232 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 5400;  NPE = 143;  NPE/event = 352.05;  CPUTime/event = 0.2027 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 5500;  NPE = 25;  NPE/event = 224.61;  CPUTime/event = 0.1319 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 5600;  NPE = 244;  NPE/event = 497.32;  CPUTime/event = 0.2614 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 5700;  NPE = 15;  NPE/event = 402.14;  CPUTime/event = 0.2402 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 5800;  NPE = 20;  NPE/event = 352.42;  CPUTime/event = 0.1793 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 5900;  NPE = 30;  NPE/event = 524.6;  CPUTime/event = 0.2302 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 6000;  NPE = 11;  NPE/event = 330.34;  CPUTime/event = 0.1893 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 6100;  NPE = 38;  NPE/event = 524.59;  CPUTime/event = 0.2831 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 6200;  NPE = 1146;  NPE/event = 286.47;  CPUTime/event = 0.1581 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 6300;  NPE = 259;  NPE/event = 332.7;  CPUTime/event = 0.1962 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 6400;  NPE = 194;  NPE/event = 259.83;  CPUTime/event = 0.152 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 6500;  NPE = 207;  NPE/event = 411.02;  CPUTime/event = 0.2464 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 6600;  NPE = 184;  NPE/event = 507.59;  CPUTime/event = 0.2805 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 6700;  NPE = 15;  NPE/event = 484.36;  CPUTime/event = 0.2666 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 6800;  NPE = 4751;  NPE/event = 602.29;  CPUTime/event = 0.3324 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 6900;  NPE = 258;  NPE/event = 279.24;  CPUTime/event = 0.1683 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 7000;  NPE = 231;  NPE/event = 445.6;  CPUTime/event = 0.2536 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 7100;  NPE = 146;  NPE/event = 446.92;  CPUTime/event = 0.241 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 7200;  NPE = 58;  NPE/event = 321.71;  CPUTime/event = 0.1853 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 7300;  NPE = 21;  NPE/event = 324.85;  CPUTime/event = 0.1883 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 7400;  NPE = 180;  NPE/event = 371.14;  CPUTime/event = 0.2135 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 7500;  NPE = 198;  NPE/event = 314.02;  CPUTime/event = 0.1813 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 7600;  NPE = 237;  NPE/event = 607.16;  CPUTime/event = 0.3165 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 7700;  NPE = 99;  NPE/event = 226.5;  CPUTime/event = 0.1331 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 7800;  NPE = 167;  NPE/event = 413.87;  CPUTime/event = 0.2361 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 7900;  NPE = 239;  NPE/event = 348.34;  CPUTime/event = 0.202 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 8000;  NPE = 3633;  NPE/event = 389.86;  CPUTime/event = 0.2083 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 8100;  NPE = 231;  NPE/event = 379.4;  CPUTime/event = 0.2128 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 8200;  NPE = 202;  NPE/event = 451.78;  CPUTime/event = 0.2397 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 8300;  NPE = 215;  NPE/event = 434.73;  CPUTime/event = 0.2527 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 8400;  NPE = 156;  NPE/event = 294.23;  CPUTime/event = 0.1707 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 8500;  NPE = 155;  NPE/event = 370.96;  CPUTime/event = 0.2171 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 8600;  NPE = 248;  NPE/event = 242.81;  CPUTime/event = 0.141 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 8700;  NPE = 14;  NPE/event = 298.51;  CPUTime/event = 0.1651 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 8800;  NPE = 212;  NPE/event = 228.81;  CPUTime/event = 0.1399 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 8900;  NPE = 211;  NPE/event = 313.46;  CPUTime/event = 0.1789 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 9000;  NPE = 15;  NPE/event = 405.43;  CPUTime/event = 0.2183 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 9100;  NPE = 17;  NPE/event = 261.74;  CPUTime/event = 0.1711 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 9200;  NPE = 157;  NPE/event = 354.5;  CPUTime/event = 0.2074 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 9300;  NPE = 4177;  NPE/event = 457.89;  CPUTime/event = 0.257 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 9400;  NPE = 203;  NPE/event = 293.06;  CPUTime/event = 0.1805 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 9500;  NPE = 230;  NPE/event = 485.07;  CPUTime/event = 0.2769 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 9600;  NPE = 218;  NPE/event = 312.45;  CPUTime/event = 0.1824 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 9700;  NPE = 3821;  NPE/event = 414.38;  CPUTime/event = 0.2335 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 9800;  NPE = 19;  NPE/event = 346.71;  CPUTime/event = 0.2037 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSEventAction.cc(138):>>> Event 9900;  NPE = 233;  NPE/event = 227.83;  CPUTime/event = 0.1366 s
+Trace:src/DSEventAction.cc(142):    Starting Position: (0,0,0) cm
+Trace:src/DSEventAction.cc(143):    Energy           : 100 keV
+Trace:src/DSEventAction.cc(144):    PDG              : 2112
+Trace:src/DSEventAction.cc(147):
+Routine:src/DSIO.cc(109):Binary File Closed
