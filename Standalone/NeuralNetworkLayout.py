@@ -105,7 +105,7 @@ class NeuralNetworkLayout(object):
         if not exists(self.dir_output+'/model/'):
             makedirs(self.dir_output+'/model/')
 
-        with open(self.dir_output+'/model/hyperparams.g4ds',"w") as f:
+        with open(self.dir_output+'/model/hyperparameters.gan4ds',"w") as f:
             allParams=[a for a in dir(self) if not a.startswith('__') and not callable(getattr(self, a))]
             for param in allParams:
                 f.writelines(param+"\t"+str(getattr(self,param))+"\n")

@@ -2,3 +2,4 @@ in/
 #for now ingore the outputs until a proper structure has been set
 out/
 .DS_Store
+Standalone/__pycache__/

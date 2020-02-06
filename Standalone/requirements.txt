@@ -4,3 +4,6 @@ pandas
 matplotlib
 tensorboard
 uproot
+imageio
+imageio-ffmpeg
+progress

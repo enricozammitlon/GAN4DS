@@ -2,9 +2,12 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
+from progress.bar import IncrementalBar
+
+
 class NeuralNetworkTraining:
 
-    def __init__(self,layout,tds,unseends,fileDir,plotRes=200,epochs=2,epochCheck=1,bs=1000,ns=1000,unseenE='200',save=True):
+    def __init__(self,layout,tds,fileDir,unseends=[],plotRes=200,epochs=25,epochCheck=1,bs=1000,ns=1000,unseenE='',save=True):
         self.plot_resolution=plotRes
         self.dir_output=fileDir
         self.all_epochs=[]
@@ -28,6 +31,10 @@ class NeuralNetworkTraining:
         self.unseen_energy=unseenE
         self.d_loss=[]
         self.d_acc=[]
+        self.reel_images=[]
+        self.last=False
+
+        self.normaliseData()
         
     def normaliseData(self):
         #+1 is for the unseen dataset
@@ -38,10 +45,12 @@ class NeuralNetworkTraining:
                 self.training_ds[self.energies[en]][var]/=temp_maximum
                 self.normalisation[self.energies[en]][var]=temp_maximum
         self.normalisation[self.unseen_energy]={}
-        for var in self.variables_of_interest:
-            temp_maximum=np.max(self.unseen_ds[self.unseen_energy][var])
-            self.unseen_ds[self.unseen_energy][var]/=temp_maximum
-            self.normalisation[self.unseen_energy][var]=temp_maximum
+
+        for unseen in self.unseen_ds:
+            for var in self.variables_of_interest:
+                temp_maximum=np.max(unseen[self.unseen_energy][var])
+                unseen[self.unseen_energy][var]/=temp_maximum
+                self.normalisation[self.unseen_energy][var]=temp_maximum
 
         
 
@@ -92,14 +101,13 @@ class NeuralNetworkTraining:
             title+=var+", "
         title += "from a "+str(self.dimensionality)+"D"
         #Add check if GAN or cGAN
-        title+=" cGAN at Epoch "+str(self.epoch)+" and batch size "+str(self.batch_size)
+        title+=" cGAN at Epoch "+str(self.epoch+1)+" and batch size "+str(self.batch_size)
         return title
 
-    def visualiseCurrentEpoch(self):
-        #+1 stands for number of unseen energies
+    def visualiseCurrentEpoch(self,training_ds,generated_ds,energies):
 
         histograms=[]
-
+        
         fig, axes = plt.subplots(1,self.dimensionality,squeeze=False)
         
         fh=10
@@ -109,18 +117,21 @@ class NeuralNetworkTraining:
         fig.set_figwidth(fw)
 
         fig.suptitle(self.get_plot_title())
+        cmap = matplotlib.cm.get_cmap('tab10')
+        norm = matplotlib.colors.Normalize(vmin=float(energies[0]), vmax=float(energies[-1]))
 
         for num,var in enumerate(self.variables_of_interest):
             current_histograms=[]
-            for en in range(1,len(self.energies)):
-                true_histogram=axes[0,num].hist(self.training_ds[self.energies[en]][var]*self.normalisation[self.energies[en]][var],density = True, bins = self.plot_resolution, alpha = 0.4, label = "G4DS "+self.energies[en]+"keV")
-                generated_histogram=axes[0,num].hist(self.generated_ds[var][self.energies[en]]*self.normalisation[self.energies[en]][var],density = True, bins = self.plot_resolution, alpha = 1, label = "Gan4DS "+self.energies[en]+"keV")
+            for en in range(0,len(energies)):
+                true_histogram=axes[0,num].hist(training_ds[energies[en]][var]*self.normalisation[energies[en]][var],density = True, bins = self.plot_resolution, color=cmap(norm(float(energies[en]))), alpha = 0.4, label = "G4DS "+energies[en]+"keV")
+                generated_histogram=axes[0,num].hist(generated_ds[energies[en]][var]*self.normalisation[energies[en]][var],density = True, bins = self.plot_resolution, color=cmap(norm(float(energies[en]))), alpha = 1, label = "Gan4DS "+energies[en]+"keV")
                 current_histograms.append([true_histogram,generated_histogram])
 
-            #same but add the unseen energies
-            true_histogram=axes[0,num].hist(self.unseen_ds[self.unseen_energy][var]*self.normalisation[self.unseen_energy][var],density = True, bins = self.plot_resolution, alpha = 0.4, label = "G4DS "+self.unseen_energy+"keV")
-            generated_histogram=axes[0,num].hist(self.generated_ds[var][self.unseen_energy]*self.normalisation[self.unseen_energy][var],density = True, bins = self.plot_resolution, alpha = 1, label = "Gan4DS "+self.unseen_energy+"keV")
-            current_histograms.append([true_histogram,generated_histogram])
+            for unseen in self.unseen_ds:
+                #same but add the unseen energies
+                true_histogram=axes[0,num].hist(self.unseen_ds[self.unseen_energy][var]*self.normalisation[self.unseen_energy][var],density = True, bins = self.plot_resolution, color=cmap(norm(float(self.unseen_energy))), alpha = 0.4, label = "G4DS "+self.unseen_energy+"keV")
+                generated_histogram=axes[0,num].hist(generated_ds[self.unseen_energy][var]*self.normalisation[self.unseen_energy][var],density = True, bins = self.plot_resolution, color=cmap(norm(float(self.unseen_energy))), alpha = 1, label = "Gan4DS "+self.unseen_energy+"keV")
+                current_histograms.append([true_histogram,generated_histogram])
 
             histograms.append(current_histograms)
 
@@ -128,7 +139,9 @@ class NeuralNetworkTraining:
             axes[0,num].set_ylabel(r"$\rho\left(x\right)$", size=11, labelpad=5, rotation="horizontal")
             axes[0,num].legend(loc="upper right", fontsize=11)
         if(self.save):
-            plt.savefig(self.dir_output+'/figures/'+str(self.dimensionality)+"D cGAN"+".png")
+            plt.savefig(self.dir_output+'/figures/all/reel_f_'+str(int(self.epoch+1/self.epochCheck))+".png")
+        if(self.last):
+            plt.savefig(self.dir_output+'/figures/final_product/'+str(self.dimensionality)+"D_cGAN"+".png")
         
         true_histograms=[]
         generated_histograms=[]
@@ -137,10 +150,15 @@ class NeuralNetworkTraining:
             generated_histograms.append([b[1] for b in histograms[a]])
 
         if(self.metric(true_histograms,generated_histograms)):
-            print('I shall save')
+            print('\tNew minimum found here.')
+            self.gan.save(self.dir_output+'/model/'+"weights.h5")
+
+        plt.close(fig)
 
     def initiateTraining(self):
+        bar = IncrementalBar('Training', max=self.epochs)
         for e in range(self.epochs) :
+            bar.next()
             self.epoch=e
             noise, noise_hyperparams    = self.get_noise()
             batch_DS, batch_hyperparams = self.get_train_data()
@@ -177,11 +195,23 @@ class NeuralNetworkTraining:
                 noise, noise_hyperparams = self.get_noise()
                 temp_generated = self.layout.g.predict([noise, noise_hyperparams])
                 
-                hyperparams = np.full(fill_value=self.unseen_energy, shape=(self.batch_size, 1))
-                z = np.random.normal(size=(self.batch_size, self.noise_size))
-                generated_unseen_energy = self.layout.g.predict([z, hyperparams])
+                for unseen in self.unseen_ds:
+                    hyperparams = np.full(fill_value=self.unseen_energy, shape=(self.batch_size, 1))
+                    z = np.random.normal(size=(self.batch_size, self.noise_size))
+                    generated_unseen_energy = self.layout.g.predict([z, hyperparams])
                 
                 gen_class_length = int(temp_generated.shape[0]/(len(self.energies)))
+
+                for en in range(1,len(self.energies)+1):
+                    self.generated_ds[self.energies[en-1]]={}
+                    for num,var in enumerate(self.variables_of_interest):
+                        current_var = np.asarray(temp_generated)[:,num]
+                        gen_energies_var=current_var[(en-1)*gen_class_length:en*gen_class_length]
+                        self.generated_ds[self.energies[en-1]][var]=gen_energies_var
+                    for unseen in self.unseen_ds:
+                        self.generated_ds[self.unseen_energy][var]=np.asarray(generated_unseen_energy)[:,num]
+
+                '''
                 for num,var in enumerate(self.variables_of_interest):
                     current_var = np.asarray(temp_generated)[:,num]
                     self.generated_ds[var]={}
@@ -189,28 +219,43 @@ class NeuralNetworkTraining:
                         gen_energies_var=current_var[(en-1)*gen_class_length:en*gen_class_length]
                         self.generated_ds[var][self.energies[en-1]]=gen_energies_var
                     
-                    self.generated_ds[var][self.unseen_energy]=np.asarray(generated_unseen_energy)[:,num]
-                
+                    for unseen in self.unseen_ds:
+                        self.generated_ds[var][self.unseen_energy]=np.asarray(generated_unseen_energy)[:,num]
+                '''
+
                 multiples=int(len(self.training_ds[self.energies[0]][self.variables_of_interest[0]])/self.batch_size)
                 for i in range(1,multiples) :
                     noise, noise_hyperparams = self.get_noise()
                     temp_generated = self.layout.g.predict([noise, noise_hyperparams])
                     
-                    hyperparams = np.full(fill_value=self.unseen_energy, shape=(self.batch_size, 1))
-                    z = np.random.normal(size=(self.batch_size, self.noise_size))
-                    generated_unseen_energy = self.layout.g.predict([z, hyperparams])
+                    for unseen in self.unseen_ds:
+                        hyperparams = np.full(fill_value=self.unseen_energy, shape=(self.batch_size, 1))
+                        z = np.random.normal(size=(self.batch_size, self.noise_size))
+                        generated_unseen_energy = self.layout.g.predict([z, hyperparams])
 
                     gen_class_length = int(temp_generated.shape[0]/(len(self.energies)))
-                    for num,var in enumerate(self.variables_of_interest):
-                        current_var = np.asarray(temp_generated)[:,num]
-                        for en in range(1,len(self.energies)+1):
+
+                    for en in range(1,len(self.energies)+1):
+                        for num,var in enumerate(self.variables_of_interest):
+                            current_var = np.asarray(temp_generated)[:,num]
                             gen_energies_var=current_var[(en-1)*gen_class_length:en*gen_class_length]
-                            self.generated_ds[var][self.energies[en-1]]=np.concatenate([self.generated_ds[var][self.energies[en-1]],gen_energies_var])
-
-                        self.generated_ds[var][self.unseen_energy]=np.concatenate([self.generated_ds[var][self.unseen_energy],np.asarray(generated_unseen_energy)[:,num]])
-
-                self.visualiseCurrentEpoch()
+                            self.generated_ds[self.energies[en-1]][var]=np.concatenate([self.generated_ds[self.energies[en-1]][var],gen_energies_var])
+                        for unseen in self.unseen_ds:
+                            self.generated_ds[self.unseen_energy][var]=np.concatenate([self.generated_ds[var][self.unseen_energy],np.asarray(generated_unseen_energy)[:,num]])
+                
+                if(self.epoch+self.epochCheck>=self.epochs):
+                    self.last=True
+                
+                #Set instead of 3 the number of candidates to show
+                indexes=np.round(np.linspace(0, len(self.energies) - 1, 3)).astype(int)
+                selected_energies=[self.energies[i] for i in range(len(self.energies)) if i in indexes]
+                selected_training_ds=dict(filter(lambda elem: elem[0] in selected_energies,self.training_ds.items()))
+                selected_generated_ds=dict(filter(lambda elem: elem[0] in selected_energies,self.generated_ds.items()))
+                
+                self.visualiseCurrentEpoch(selected_training_ds,selected_generated_ds,selected_energies)
 
             self.all_epochs.append(e)
             self.d_loss.append(d_loss)
             self.d_acc.append(d_acc)
+
+        bar.finish()

@@ -49,11 +49,16 @@ class Preprocessor:
     def visualiseData(self,ds,save=True,source='training'):
         if not exists(self.dir_output+'/figures/'):
             makedirs(self.dir_output+'/figures/')
-        
+            makedirs(self.dir_output+'/figures/all/')
+            makedirs(self.dir_output+'/figures/final_product/')
+
+        cmap = matplotlib.cm.get_cmap('tab10')
+        norm = matplotlib.colors.Normalize(vmin=float(self.energies[0]), vmax=float(self.energies[-1]))
+
         for variable in self.variables_of_interest:
             plt.figure()
             for energy in self.energies:
-                plt.hist(ds[energy][variable], density = True, bins = 205, alpha = 0.8,label=r"($E_{nr}="+energy+r"~{\rm KeV}$)")
+                plt.hist(ds[energy][variable], density = True, bins = 205, color=cmap(norm(float(energy))), alpha = 0.8,label=r"($E_{nr}="+energy+r"~{\rm KeV}$)")
             plt.xlabel(variable.capitalize(), size=11, labelpad=5)
             plt.ylabel(r"$\rho\left(x\right)$", size=11, labelpad=5, rotation="horizontal")
             plt.legend(loc="upper right", fontsize=11)
