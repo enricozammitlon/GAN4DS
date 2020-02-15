@@ -1,7 +1,9 @@
-from keras.layers     import BatchNormalization, Dense, Dropout, Input, LeakyReLU, Concatenate
-from keras.models     import Model, Sequential, load_model
-from keras.optimizers import Adam, SGD
+from tensorflow.keras.layers     import BatchNormalization, Dense, Dropout, Input, LeakyReLU, Concatenate
+from tensorflow.keras.models     import Model, Sequential, load_model
+from tensorflow.keras.optimizers import Adam, SGD
+from tensorflow.keras.callbacks import TensorBoard
 
+import tensorflow as tf
 from os import makedirs
 from os.path import exists
 
@@ -99,11 +101,23 @@ class NeuralNetworkLayout(object):
     def visualiseData(self,save=True):
         pass
 
-    
-
     def saveHyperParameters(self):
+
         if not exists(self.dir_output+'/model/'):
             makedirs(self.dir_output+'/model/')
+            makedirs(self.dir_output+'/model/logs/')
+
+        log_path = self.dir_output+'/model/logs/'
+
+        self.tensorboard = TensorBoard(
+            log_dir=log_path,
+            histogram_freq=0,
+            batch_size=self.noise,
+            write_graph=True,
+            write_grads=True
+            )
+
+        self.tensorboard.set_model(self.gan)
 
         with open(self.dir_output+'/model/hyperparameters.gan4ds',"w") as f:
             allParams=[a for a in dir(self) if not a.startswith('__') and not callable(getattr(self, a))]

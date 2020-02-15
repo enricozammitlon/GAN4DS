@@ -104,6 +104,12 @@ class NeuralNetworkTraining:
         title+=" cGAN at Epoch "+str(self.epoch+1)+" and batch size "+str(self.batch_size)
         return title
 
+    def named_logs(self,model,logs):
+        result = {}
+        for l in zip(model.metrics_names, logs):
+            result[l[0]] = l[1]
+        return result
+
     def visualiseCurrentEpoch(self,training_ds,generated_ds,energies):
 
         histograms=[]
@@ -176,8 +182,10 @@ class NeuralNetworkTraining:
 
                 
             self.layout.d.trainable = False
-            self.gan.train_on_batch([noise, noise_hyperparams], train_label)
+            logs = self.gan.train_on_batch([noise, noise_hyperparams], train_label)
             
+            self.layout.tensorboard.on_epoch_end(self.epoch, self.named_logs(self.gan, logs))
+
             if e == 0 or (e+1) % self.epochCheck == 0 :
                 '''
                 #Old Working Code
@@ -258,4 +266,5 @@ class NeuralNetworkTraining:
             self.d_loss.append(d_loss)
             self.d_acc.append(d_acc)
 
+        self.layout.tensorboard.on_train_end(None)
         bar.finish()

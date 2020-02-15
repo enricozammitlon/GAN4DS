@@ -46,3 +46,5 @@ class Postprocessor :
         plt.legend(loc="center right", fontsize=11)
         if(save):
             plt.savefig(self.dir_out+'/figures/final_product/'+"performance_graph_"+str(self.dimensionality)+"D_cGAN.png")
+
+#tensorboard --logdir out/run_6_/model/logs/train --host 0.0.0.0 --port 6006
