@@ -1,0 +1,38 @@
+Bootstrap: docker
+FROM tensorflow/tensorflow:latest-py3
+
+%environment
+export DEBIAN_FRONTEND=interactive
+
+%post
+    echo 'export USERNAME=vscode USER_UID=1000 USER_GID=$USER_UID' >>$SINGULARITY_ENVIRONMENT
+    apt-get update
+    apt-get -y install --no-install-recommends apt-utils dialog 2>&1
+    #
+    # Verify git, process tools, lsb-release (common in install instructions for CLIs) installed
+    apt-get -y install git iproute2 procps lsb-release python3-pip
+    #
+    # Install pylint
+    pip3 install --upgrade pip
+    pip3 --disable-pip-version-check --no-cache-dir install pylint
+    #
+    # Update Python environment based on requirements.txt
+    #&& pip --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requirements.txt
+    #&& rm -rf /tmp/pip-tmp
+    #
+    # Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
+    groupadd --gid $USER_GID $USERNAME
+    useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME
+    # [Optional] Add sudo support for the non-root user
+    apt-get install -y sudo
+    echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME
+    chmod 0440 /etc/sudoers.d/$USERNAME
+    #
+    # Clean up
+    apt-get autoremove -y
+    apt-get clean -y
+    rm -rf /var/lib/apt/lists/*
+    pip3 install -r requirements.txt && mkdir ~/.config/ && mkdir ~/.config/matplotlib/ && cp matplotlibrc ~/.config/matplotlib/ && export MATPLOTLIBRC=~/.configure/matplotlib
+
+%environment
+export DEBIAN_FRONTEND=dialog
