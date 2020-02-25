@@ -29,7 +29,7 @@ class Postprocessor :
         images=[]
         files = [f for f in listdir(basedir) if isfile(join(basedir, f))]
 
-        for filename in range(0,len(files)):
+        for filename in range(0,len(files)-1):
             images.append(imageio.imread(basedir+basename+str(filename+1)+'.png'))
         imageio.mimsave(self.dir_out+'/figures/final_product/'+str(self.dimensionality)+"D_cGAN_complete_reel.mp4",images)
 

@@ -8,23 +8,22 @@ from os.path import isdir, join,exists
 
 class Preprocessor:
 
-    def __init__(self,idir='in',odir='out',variables=['s1'],en=['50'],v=False):
+    def __init__(self,idir='in',odir='out/',variables=['s1'],en=['50'],v=False):
         self.dir_input=idir
         self.dir_output=odir
         self.variables_of_interest=variables
         self.energies=en
-        self.current_version=int(self.getLatestVersion())+1
+        self.current_version=int(self.getLatestVersion(self.dir_output))+1
         self.dir_output+='/run_'+str(self.current_version)+"_"
         makedirs(self.dir_output)
         self.training_data=self.getData(v)
 
-    def getLatestVersion(self):
-        lastFile = [f for f in listdir(self.dir_output) if isdir(join(self.dir_output, f))]
-        lastFile.sort(reverse=True)
+    def getLatestVersion(self,folder):
+        lastFile = [f for f in listdir(folder) if isdir(join(folder, f))]
         if(len(lastFile)<1):
             return "0"
         else:
-            lastFile=lastFile[0]
+            lastFile=lastFile[-1]
             begin = lastFile.find('_')+1
             end = lastFile.find('_',begin)
             version = lastFile[begin:end]
@@ -49,8 +48,6 @@ class Preprocessor:
     def visualiseData(self,ds,save=True,source='training'):
         if not exists(self.dir_output+'/figures/'):
             makedirs(self.dir_output+'/figures/')
-            makedirs(self.dir_output+'/figures/all/')
-            makedirs(self.dir_output+'/figures/final_product/')
 
         cmap = matplotlib.cm.get_cmap('tab10')
         norm = matplotlib.colors.Normalize(vmin=float(self.energies[0]), vmax=float(self.energies[-1]))

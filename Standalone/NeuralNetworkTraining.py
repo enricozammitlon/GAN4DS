@@ -1,13 +1,13 @@
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-
+import tensorflow as tf
 from progress.bar import IncrementalBar
-
+import io
 
 class NeuralNetworkTraining:
 
-    def __init__(self,layout,tds,fileDir,unseends=[],plotRes=200,epochs=25,epochCheck=1,bs=1000,ns=1000,unseenE='',save=True):
+    def __init__(self,layout,tds,fileDir,epochs,epochCheck,filewriter,unseends=[],plotRes=200,bs=1000,ns=1000,unseenE='',save=True):
         self.plot_resolution=plotRes
         self.dir_output=fileDir
         self.all_epochs=[]
@@ -33,7 +33,7 @@ class NeuralNetworkTraining:
         self.d_acc=[]
         self.reel_images=[]
         self.last=False
-
+        self.file_writer=filewriter
         self.normaliseData()
         
     def normaliseData(self):
@@ -145,7 +145,21 @@ class NeuralNetworkTraining:
             axes[0,num].set_ylabel(r"$\rho\left(x\right)$", size=11, labelpad=5, rotation="horizontal")
             axes[0,num].legend(loc="upper right", fontsize=11)
         if(self.save):
-            plt.savefig(self.dir_output+'/figures/all/reel_f_'+str(int(self.epoch+1/self.epochCheck))+".png")
+            plt.savefig(self.dir_output+'/figures/all/reel_f_'+str(int((self.epoch+1)/self.epochCheck))+".png")
+            # Save the plot to a PNG in memory.
+            buf = io.BytesIO()
+            plt.savefig(buf, format='png')
+            # Closing the figure prevents it from being displayed directly inside
+            # the notebook.
+            plt.close()
+            buf.seek(0)
+            # Convert PNG buffer to TF image
+            image = tf.image.decode_png(buf.getvalue(), channels=4)
+            # Add the batch dimension
+            image = tf.expand_dims(image, 0)
+            with self.file_writer.as_default():
+              tf.summary.image("Histogram "+str(int((self.epoch+1)/self.epochCheck)), image, step=self.epoch)
+
         if(self.last):
             plt.savefig(self.dir_output+'/figures/final_product/'+str(self.dimensionality)+"D_cGAN"+".png")
         

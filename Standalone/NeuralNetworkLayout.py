@@ -8,7 +8,7 @@ from os import makedirs
 from os.path import exists
 
 class NeuralNetworkLayout(object):
-    def __init__(self,gtrate,dtrate,glayers,dlayers,gnodes,dnodes,gdo,ddo,gbeta1,dbeta1,dimensions,noise,fileDir='out'):
+    def __init__(self,gtrate,dtrate,glayers,dlayers,gnodes,dnodes,gdo,ddo,gbeta1,dbeta1,dimensions,noise,echeck,fileDir='out'):
         self.dir_output=fileDir
         self.gan_training_rate=gtrate
         self.d_training_rate=dtrate
@@ -22,6 +22,8 @@ class NeuralNetworkLayout(object):
         self.d_beta1=dbeta1
         self.dimensionality=dimensions
         self.noise=noise
+        self.epochCheck=echeck
+        self.logdir=self.dir_output+'/model/logs/'
         self.d=None
         self.g=None
         self.gan=None
@@ -107,11 +109,11 @@ class NeuralNetworkLayout(object):
             makedirs(self.dir_output+'/model/')
             makedirs(self.dir_output+'/model/logs/')
 
-        log_path = self.dir_output+'/model/logs/'
+        
 
         self.tensorboard = TensorBoard(
-            log_dir=log_path,
-            histogram_freq=0,
+            log_dir=self.logdir,
+            histogram_freq=self.epochCheck,
             batch_size=self.noise,
             write_graph=True,
             write_grads=True
