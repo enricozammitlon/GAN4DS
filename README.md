@@ -1,7 +1,8 @@
 # MPhys Project
 # Table of Contents
-1. [First Installation](#first-time-installation)
-2. [Folder Structure](#folder-structure)
+1. [First Time Installation](#first-time-installation)
+2. [Running Program](#running-program)
+3. [Folder Structure](#folder-structure)
 
 ## First time installation steps on hepgpuX on Manchester Cluster <a name="first-time-installation"></a>
 ### 1. Installing Python3.6.x
@@ -61,22 +62,28 @@
       > Executing op MatMul in device /job:localhost/replica:0/task:0/device:GPU:0
    5. Run `python3 Gan4DS.py` to run the package
 
-## Folder Structure <a name="folder-structure"></a>
+## Running the Program <a name="running-program"></a>
+   1. Login on hepgpuX via `ssh <your-username>@hepgpuX.blackett.manchester.ac.uk`
+   2. Move to `cd /pc20xx-dataX/<your-username>/`
+   3. Run `source auto_export.sh`
+   4. Activate the python environment source `./py3.6/bin/activate`
+   4. Move to `cd mphys-project/Standalone`
+   5. Edit the file Gan4DS.py to change any hyperparameters. The layout maybe changed from NeuralNetworkLayout.py but is            pending to be changed to an XML specified layout in the future.
+   6. When ready run `python3 Gan4DS.py`
+   
 
+## Folder Structure <a name="folder-structure"></a>
 ### 1. Bibliography
 
 The bibliography contains an relevant articles that we have found, or have been sent to us. 
 
 ### 2. G4 runs
-
 G4 runs contain the data from any G4 runs we do, as well as the log files to ensure the dat can be reproduced.
 
 ### 3. Log/Reports
-
 Just any notes we thought would be useful to make, hoverever these are now largely incorportated into Jupyter notebooks we have produced. 
 
 ## 4. Jupyter Notebooks
-
 These were initially ran locally, but after some initial 'PoC' GANs, we moved on to runnng them on Google Colab for some GPU power, coupled with the ease of running on this software.
 
    
