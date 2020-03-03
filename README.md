@@ -1,8 +1,21 @@
 # MPhys Project
 # Table of Contents
-1. [First Time Installation](#first-time-installation)
-2. [Running Program](#running-program)
-3. [Folder Structure](#folder-structure)
+1. [Folder Structure](#folder-structure)
+2. [First Time Installation](#first-time-installation)
+3. [Running Program](#running-program)
+
+## Folder Structure <a name="folder-structure"></a>
+### G4 runs
+This folder contains 4 example data files of dark matter runs to be used with the program. For a more in-depth explanation and steps to produce such files see the README.MD in that folder.
+
+### Reports
+These are 4 reports, one for each of us and one for each semster. In it we explain in detail our master's project and our results.
+
+### Jupyter Notebooks
+These were initially run locally (found in 'Legacy' folder) but after some initial 'PoC' GANs we moved on to runnng them on Google Colab for some GPU power, coupled with the ease of running on this software. Here one can find all of our notebooks that we used for 'R&D'. For the actual final code please see the Standalone folder
+
+### Standalone
+This folder contains the final production code. It is a complete package producing all of our work over the course of the final year.
 
 ## First time installation steps on hepgpuX on Manchester Cluster <a name="first-time-installation"></a>
 ### 1. Installing Python3.6.x
@@ -70,22 +83,6 @@
    4. Move to `cd mphys-project/Standalone`
    5. Edit the file Gan4DS.py to change any hyperparameters. The layout maybe changed from NeuralNetworkLayout.py but is            pending to be changed to an XML specified layout in the future.
    6. When ready run `python3 Gan4DS.py`
-   
-
-## Folder Structure <a name="folder-structure"></a>
-### Bibliography
-
-The bibliography contains an relevant articles that we have found, or have been sent to us. 
-
-### G4 runs
-G4 runs contain the data from any G4 runs we do, as well as the log files to ensure the dat can be reproduced.
-
-### Log/Reports
-Just any notes we thought would be useful to make, hoverever these are now largely incorportated into Jupyter notebooks we have produced. 
-
-### Jupyter Notebooks
-These were initially ran locally, but after some initial 'PoC' GANs, we moved on to runnng them on Google Colab for some GPU power, coupled with the ease of running on this software.
-
    
 [1]:http://rpm.pbone.net/index.php3/stat/3/limit/9/srodzaj/1/dl/40/search/libcuda.so.1()(64bit)/field[]/1/field[]/2
 
