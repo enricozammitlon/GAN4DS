@@ -1,12 +1,10 @@
-'''
-In jupyter dont need this
 from Preprocessor import Preprocessor
 from NeuralNetworkLayout import NeuralNetworkLayout
 from NeuralNetworkTraining import NeuralNetworkTraining
 from Postprocessor import Postprocessor
-'''
 #add in where to modify the unseen energy
 from tensorboard.plugins.hparams import api as hp
+from os import makedirs
 import tensorflow as tf
 
 variables_of_interest=['s1']
@@ -67,7 +65,7 @@ for nodes in HP_NODES.domain.values:
 
       post=Postprocessor(t.all_epochs,t.d_acc,t.d_loss,dir_output,len(variables_of_interest))
       post.createAnimation()
-      
+
       file_writer2 = tf.summary.create_file_writer(logs_hyperparam_dir+'/'+str(session_num))
       with file_writer2.as_default():
         hp.hparams(hparams)
