@@ -23,7 +23,7 @@ class Preprocessor:
         if(len(lastFile)<1):
             return "0"
         else:
-            lastFile=lastFile[-1]
+            lastFile=lastFile[0]
             begin = lastFile.find('_')+1
             end = lastFile.find('_',begin)
             version = lastFile[begin:end]
