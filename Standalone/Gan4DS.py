@@ -8,7 +8,7 @@ from os import makedirs
 import tensorflow as tf
 
 variables_of_interest=['s1']
-energies=['50','75','100','150','200']
+energies=['1','10','20','40','60']
 unsen_energies=[]
 
 HP_NODES = hp.HParam('num_nodes', hp.Discrete([40, 50]))
