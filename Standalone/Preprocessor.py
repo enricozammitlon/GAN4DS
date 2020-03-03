@@ -33,10 +33,10 @@ class Preprocessor:
     def getData(self,verbose=False):
         allTrees={}
         if(verbose and len(self.energies)>0):
-            uproot.open(self.dir_input +"/dark_matter_runs_"+self.energies[0]+"kev.root")["dstree"].show()
+            uproot.open(self.dir_input +"/outRun_"+self.energies[0]+".root")["dstree"].show()
         for energy in self.energies:
             allTrees[energy]={}
-            currentTree=uproot.open(self.dir_input+"/dark_matter_runs_"+energy+"kev.root")["dstree"]
+            currentTree=uproot.open(self.dir_input+"/outRun_"+energy+".root")["dstree"]
             for var in self.variables_of_interest:
                 allTrees[energy][var]=np.array(currentTree.array(f"{var}"))
         return allTrees
