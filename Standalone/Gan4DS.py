@@ -6,6 +6,7 @@ from Postprocessor import Postprocessor
 from tensorboard.plugins.hparams import api as hp
 from os import makedirs
 import tensorflow as tf
+from os.path import exists
 
 variables_of_interest=['s1']
 energies=['50','75','100','150','200']
@@ -35,10 +36,11 @@ for nodes in HP_NODES.domain.values:
     for layers in HP_LAYERS.domain.values:
       current_version=int(pre.getLatestVersion(pre.dir_output))+1
       dir_output=pre.dir_output+'/run_'+str(current_version)+"_"
-      makedirs(dir_output)
-      makedirs(dir_output+'/figures/')
-      makedirs(dir_output+'/figures/all/')
-      makedirs(dir_output+'/figures/final_product/')
+      if not exists(dir_output):
+        makedirs(dir_output)
+        makedirs(dir_output+'/figures/')
+        makedirs(dir_output+'/figures/all/')
+        makedirs(dir_output+'/figures/final_product/')
 
       hparams = {
           HP_NODES: nodes,
