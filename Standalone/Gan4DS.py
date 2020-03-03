@@ -18,7 +18,7 @@ HP_DROPOUT = hp.HParam('dropout', hp.RealInterval(0.1, 0.2))
 
 METRIC_ACCURACY = 'accuracy'
 
-pre=Preprocessor(variables=variables_of_interest,en=energies)
+pre=Preprocessor(idir='in/pickles',variables=variables_of_interest,en=energies)
 pre.visualiseData(pre.training_data,save=True)
 
 logs_hyperparam_dir=pre.dir_output+'/logs/hyperparams'

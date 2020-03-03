@@ -35,8 +35,12 @@ class Preprocessor:
         allTrees={}
         for energy in self.energies:
             allTrees[energy]=pickle.load( open( self.dir_input+"/outRun_"+energy+".p", "rb" ) )
-        return allTrees
-
+        result={}
+        for key,value in allTrees.items():
+          filt_value = {k2:v2 for k2,v2 in value.items() if k2 in self.variables_of_interest}
+          if(filt_value):
+            result[key]=filt_value
+        return result
     #Remember to add in units on plots
     def obtainUnits(self):
         pass
