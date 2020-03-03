@@ -5,6 +5,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from os import listdir,makedirs
 from os.path import isdir, join,exists
+import pickle
 
 class Preprocessor:
 
@@ -32,13 +33,8 @@ class Preprocessor:
     #Convert root to numpy arrays of variables of interest
     def getData(self,verbose=False):
         allTrees={}
-        if(verbose and len(self.energies)>0):
-            uproot.open(self.dir_input +"/outRun_"+self.energies[0]+".root")["dstree"].show()
         for energy in self.energies:
-            allTrees[energy]={}
-            currentTree=uproot.open(self.dir_input+"/outRun_"+energy+".root")["dstree"]
-            for var in self.variables_of_interest:
-                allTrees[energy][var]=np.array(currentTree.array(f"{var}"))
+            allTrees[energy]=pickle.load( open( self.dir_input+"/outRun_"+energy+".p", "rb" ) )
         return allTrees
 
     #Remember to add in units on plots
