@@ -34,11 +34,11 @@ jobs:
   validate-:
     runs-on: [ubuntu-latest]
     steps:
-      - name: Setup Python environment
-        uses: actions/setup-python@v1.1.1
-        
-      - name: Install pykwalify
-        run: pip3 install pykwalify PyYAML
-        
-      - name: YAML Schema Validator
-        run: python3 test.py
+    - name: Setup Python environment
+      uses: actions/setup-python@v1.1.1
+
+    - name: Install pykwalify
+      run: pip3 install pykwalify PyYAML
+    
+    - name: YAML Schema Validator
+      run: python3 Standalone/test.py
