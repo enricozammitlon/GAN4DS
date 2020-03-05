@@ -23,14 +23,15 @@ jobs:
     - name: Install pykwalify
       run: |
         pip3 install pykwalify PyYAML
-        cd Standalone/tests
 
     - name: General Config Validation
       run: |
+        cd Standalone/tests
         pwd
         python3 config_test.py
 
     - name: Discriminator Layout Validation
       run: |
+        cd Standalone/tests
         pwd
         python3 discriminator_test.py
