@@ -35,7 +35,7 @@ for nodes in HP_NODES.domain.values:
   for dropout_rate in (HP_DROPOUT.domain.min_value, HP_DROPOUT.domain.max_value):
     for layers in HP_LAYERS.domain.values:
       current_version=int(pre.getLatestVersion(pre.dir_output))+1
-      dir_output=pre.dir_output+'/run_'+str(current_version)+"_"
+      dir_output=pre.dir_output+'/session_'+str(current_version)+"_"
       if not exists(dir_output):
         makedirs(dir_output)
         makedirs(dir_output+'/figures/')
@@ -47,8 +47,8 @@ for nodes in HP_NODES.domain.values:
           HP_DROPOUT: dropout_rate,
           HP_LAYERS: layers,
       }
-      run_name = "run-%d" % session_num
-      print('--- Starting trial: %s' % run_name)
+      run_name = "session-%d" % session_num
+      print('--- Starting session: %s' % run_name)
       print({h.name: hparams[h] for h in hparams})
 
       n=NeuralNetworkLayout(

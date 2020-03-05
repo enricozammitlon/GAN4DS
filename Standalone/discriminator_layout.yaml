@@ -1,0 +1,8 @@
+layers:
+  -
+    type: dense
+    nodes: [1,6]
+    activation: relu
+  -
+    type: dropout
+    amount: 0.1

@@ -6,8 +6,8 @@ from os.path import isfile, join,exists,splitext
 import sys, getopt
 
 def main(argv):
-    inputFolder='../G4_RUNS/runs/'
-    outputFolder='extracted/'
+    inputFolder='./in/root/'
+    outputFolder='./in/pickles/'
     variables=['s1','s2','f200like']
 
     try:
