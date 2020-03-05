@@ -40,10 +40,5 @@ jobs:
     - name: Install pykwalify
       run: pip3 install pykwalify PyYAML
     
-    - name: Move to Standalone
-      uses: actions/checkout@v2
-      with:
-        path: Standalone
-    
     - name: YAML Schema Validator
-      run: python3 test.py
+      run: python3 Standalone/test.py
