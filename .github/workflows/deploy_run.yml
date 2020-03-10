@@ -55,4 +55,5 @@ jobs:
           bash auto_export.sh
           source py3.6/bin/activate
           rm -rf mphys-project/Standalone/out/*
-          nohup python3 mphys-project/Standalone/GAN4DS.py &
+          rm nohup.out
+          nohup python3 mphys-project/Standalone/Gan4DS.py &
