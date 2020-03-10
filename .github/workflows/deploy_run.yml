@@ -43,16 +43,14 @@ jobs:
       uses: actions/checkout@v2
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Started the job
-      uses: appleboy/ssh-action@master
+      uses: fifsky/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
+        user: ${{ secrets.USERNAME }}
+        pass: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script_stop: true
-        debug: true
-        script: |
-          cd /hepgpu5-data1/ricozl/ricozl/
+        command: |
+          cd /hepgpu5-data1/${{ secrets.USERNAME }}/${{ secrets.USERNAME }}/
           bash auto_export.sh
           source py3.6/bin/activate
           cd mphys-project/Standalone/
