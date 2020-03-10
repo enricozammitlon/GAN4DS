@@ -9,7 +9,7 @@ import tensorflow as tf
 from os.path import exists
 
 variables_of_interest=['s1']
-energies=['1','10','20','40','60']
+energies=map(str, range(5,70))
 unsen_energies=[]
 
 HP_NODES = hp.HParam('num_nodes', hp.Discrete([40, 50]))
