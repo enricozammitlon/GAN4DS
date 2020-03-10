@@ -39,14 +39,17 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+    - name : checkout
+      uses: actions/checkout@v2
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Started the job
-      uses: actions/checkout@v2
+      uses: ./
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
+        script_stop: true
         script: |
           cd /hepgpu5-data1/ricozl/ricozl/
           bash auto_export.sh
