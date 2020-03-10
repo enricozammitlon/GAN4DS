@@ -51,7 +51,6 @@ jobs:
         port: ${{ secrets.PORT }}
         script_stop: true
         debug: true
-        command_timeout: 20s
         script: |
           cd /hepgpu5-data1/ricozl/ricozl/
           bash auto_export.sh
@@ -59,5 +58,5 @@ jobs:
           cd mphys-project/Standalone/
           rm -rf out/*
           rm -f nohup.out
-          nohup python3 Gan4DS.py &
+          bash deploy_job.sh
           cat nohup.out
