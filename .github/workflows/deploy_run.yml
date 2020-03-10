@@ -57,4 +57,4 @@ jobs:
           cd mphys-project/Standalone/
           rm -rf out/*
           rm -f nohup.out
-          nohup python3 Gan4DS.py > gan4ds.out 2> gan4ds.err < /dev/null &
+          nohup python3 -u Gan4DS.py > gan4ds.out 2> gan4ds.err < /dev/null &
