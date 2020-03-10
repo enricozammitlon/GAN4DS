@@ -1,0 +1,57 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Run HepGPU
+
+# Controls when the action will run. Triggers the workflow on push or pull request 
+# events but only for the master branch
+on:
+  push:
+    branches: [ deploys ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  validating-yaml-files:
+    runs-on: [ubuntu-latest]
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Python environment
+      uses: actions/setup-python@v1.1.1
+
+    - name: Install pykwalify
+      run: |
+        pip3 install pykwalify PyYAML
+    - name: General Config Validation
+      run: |
+        cd Standalone/tests
+        pwd
+        python3 config_test.py
+    - name: Discriminator Layout Validation
+      run: |
+        cd Standalone/tests
+        pwd
+        python3 discriminator_test.py
+        
+  # This workflow contains a job called "deploy"
+  deploy:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    - name: Started the job
+      uses: ./
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd /hepgpu5-data1/ricozl/ricozl/
+          bash auto_export.sh
+          source py3.6/bin/activate
+          rm -rf mphys-project/Standalone/out/*
+          nohup python3 mphys-project/Standalone/GAN4DS.py &
