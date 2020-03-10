@@ -39,9 +39,11 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+    - name: Checking into Repository
+      uses: actions/checkout@v2
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Started the job
-      uses: actions/checkout@v2
+      uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
