@@ -52,7 +52,6 @@ jobs:
         script_stop: true
         script: |
           cd /hepgpu5-data1/ricozl/ricozl/
-          cat auto_export.sh
           bash auto_export.sh
           source py3.6/bin/activate
           rm -rf mphys-project/Standalone/out/*
