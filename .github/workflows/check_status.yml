@@ -27,7 +27,22 @@ jobs:
           bash check_if_done.sh
           
     - name: Send email
-      if: success()
-      run: |
-        echo "I would send email here.." 
-
+      uses: dawidd6/action-send-mail@v1.3.0
+      with:
+        # SMTP server address
+        server_address: smtp.gmail.com
+        # SMTP server port
+        server_port: 465
+        # Authenticate as this user to SMTP server
+        username: ${{ secrets.EMAIL_UNAME }}
+        # Authenticate with this password to SMTP server
+        password: ${{ secrets.EMAIL_PASS }}
+        # Subject of mail message
+        subject: Scheduled job on HEPGPU5 Done
+        # Body of mail message (might be a filename to read from)
+        body: Hi! Your job is done on hepgpu5. Better get crunchin. Your bot.
+        # Recipients mail addresses (separated with comma)
+        to: enrico.zammitl@gmail.com
+        # Full name of mail sender
+        from: Github Action Bot
+        # Content-Type HTTP header (MIME type)
