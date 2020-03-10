@@ -1,0 +1,9 @@
+variables_of_interest:
+  - "s1"
+energies:
+  - 10
+  - 20
+epochs:
+  1000
+epochCheck:
+  20

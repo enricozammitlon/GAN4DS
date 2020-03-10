@@ -1,0 +1,15 @@
+# Config File Schema
+type: map
+mapping:
+  variables_of_interest:
+    type: seq
+    sequence:
+    - type: str
+  energies:
+    type: seq
+    sequence:
+    - type: int
+  epochs:
+    type: int
+  epochCheck:
+    type: int
