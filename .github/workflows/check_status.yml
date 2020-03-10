@@ -22,6 +22,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
+        script_stop: true
         script: |
           cd /hepgpu5-data1/ricozl/ricozl/mphys-project/Standalone/
           bash check_if_done.sh
