@@ -1,5 +1,6 @@
-stat = (tails -1 gan4ds.out)
-if [[ $stat == *"--JOB DONE--"* ]]; then
+stat = "$(tail -1 gan4ds.out)"
+compare = "--JOB DONE--"
+if [ $stat == $compare ]; then
   echo "Job is done!"
 else
     echo ERROR: Job is not done yet. 1>&2
