@@ -74,3 +74,4 @@ for nodes in HP_NODES.domain.values:
         tf.summary.scalar(METRIC_ACCURACY, t.d_acc[-1], step=1)
 
       session_num += 1
+print("--JOB DONE--")
