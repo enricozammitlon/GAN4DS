@@ -1,4 +1,3 @@
-import uproot
 import pandas
 import numpy as np
 import matplotlib
