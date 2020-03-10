@@ -50,6 +50,8 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script_stop: true
+        debug: true
+        command_timeout: 5s
         script: |
           cd /hepgpu5-data1/ricozl/ricozl/
           bash auto_export.sh
