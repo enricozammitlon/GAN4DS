@@ -54,6 +54,7 @@ jobs:
           cd /hepgpu5-data1/ricozl/ricozl/
           bash auto_export.sh
           source py3.6/bin/activate
-          rm -rf mphys-project/Standalone/out/*
+          cd mphys-project/Standalone/
+          rm -rf out/*
           rm -f nohup.out
-          nohup python3 mphys-project/Standalone/Gan4DS.py &
+          nohup python3 Gan4DS.py &
