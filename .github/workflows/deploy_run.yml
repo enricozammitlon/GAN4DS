@@ -39,11 +39,9 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - name : checkout
-      uses: actions/checkout@v2
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Started the job
-      uses: ./
+      uses: actions/checkout@v2
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
@@ -52,6 +50,7 @@ jobs:
         script_stop: true
         script: |
           cd /hepgpu5-data1/ricozl/ricozl/
+          cat auto_export.sh
           bash auto_export.sh
           source py3.6/bin/activate
           rm -rf mphys-project/Standalone/out/*
