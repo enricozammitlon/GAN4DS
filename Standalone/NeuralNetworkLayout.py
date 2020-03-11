@@ -32,12 +32,13 @@ class NeuralNetworkLayout(object):
         noise_in = Input((self.noise,))
         g1 = Dense(self.gan_nodes, activation="relu")(noise_in)
         g1 = Dropout(self.gan_dropout)(g1)
-        g1 = BatchNormalization()(g1)
         g1 = Dense(self.gan_nodes, activation="relu")(g1)
 
         #Input of condition(eg. energy)
         hyper_in = Input((1,))
         g2 = Dense(self.gan_nodes, activation="relu")(hyper_in)
+        g2 = Dropout(self.gan_dropout)(g2)
+        g2 = Dense(self.gan_nodes, activation="relu")(g1)
 
         gc = Concatenate()([g1, g2])
         gc = BatchNormalization()(gc)
@@ -70,12 +71,13 @@ class NeuralNetworkLayout(object):
         dc = Concatenate()([d1, d2])
 
         dc = Dense(self.d_nodes , activation="relu")(dc)
-        dc = Dropout(self.d_dropout)(dc)
         dc = Dense(self.d_nodes , activation="relu")(dc)
         dc = Dropout(self.d_dropout)(dc)
-        dc = Dense(self.d_nodes , activation="relu")(dc)
         dc = LeakyReLU(0.2)(dc)
-        dc = Dropout(self.d_dropout)(dc)
+        dc = Dense(self.d_nodes , activation="relu")(dc)
+        dc = Dropout(self.self.d_dropout)(dc)
+        dc = LeakyReLU(0.2)(dc)
+        dc = Dropout(self.self.d_dropout)(dc)
 
         dc = Dense(2, activation="softmax")(dc)
 

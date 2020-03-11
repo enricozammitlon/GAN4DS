@@ -12,7 +12,7 @@ variables_of_interest=['s1']
 energies=list(map(str, range(5,70)))
 unsen_energies=[]
 
-HP_D_NODES = hp.HParam('num_d_nodes', hp.Discrete([15, 25]))
+HP_D_NODES = hp.HParam('num_d_nodes', hp.Discrete([35, 45]))
 HP_G_NODES = hp.HParam('num_g_nodes', hp.Discrete([65, 75]))
 HP_DROPOUT = hp.HParam('dropout', hp.RealInterval(0.15, 0.25))
 
@@ -62,7 +62,7 @@ for d_nodes in HP_D_NODES.domain.values:
       unseen_data={k:pre.training_data[k] for k in pre.training_data if k in unsen_energies}
 
 
-      t=NeuralNetworkTraining(n,tds=trainable_data,bs=1000,epochs=10000,epochCheck=n.epochCheck,fileDir=dir_output,filewriter=file_writer)
+      t=NeuralNetworkTraining(n,tds=trainable_data,bs=1000,epochs=1500,epochCheck=n.epochCheck,fileDir=dir_output,filewriter=file_writer)
       t.initiateTraining()
 
       post=Postprocessor(t.all_epochs,t.d_acc,t.d_loss,dir_output,len(variables_of_interest))
