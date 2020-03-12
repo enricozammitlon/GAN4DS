@@ -8,7 +8,7 @@ from os import makedirs
 import tensorflow as tf
 from os.path import exists
 
-variables_of_interest=['s1']
+variables_of_interest=['s2']
 energies=list(map(str, range(5,70)))
 unsen_energies=[]
 
