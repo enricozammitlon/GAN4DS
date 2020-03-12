@@ -75,9 +75,9 @@ class NeuralNetworkLayout(object):
         dc = Dropout(self.d_dropout)(dc)
         dc = LeakyReLU(0.2)(dc)
         dc = Dense(self.d_nodes , activation="relu")(dc)
-        dc = Dropout(self.self.d_dropout)(dc)
+        dc = Dropout(self.d_dropout)(dc)
         dc = LeakyReLU(0.2)(dc)
-        dc = Dropout(self.self.d_dropout)(dc)
+        dc = Dropout(self.d_dropout)(dc)
 
         dc = Dense(2, activation="softmax")(dc)
 
