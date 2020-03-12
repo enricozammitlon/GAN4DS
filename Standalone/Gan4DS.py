@@ -2,7 +2,6 @@ from Preprocessor import Preprocessor
 from NeuralNetworkLayout import NeuralNetworkLayout
 from NeuralNetworkTraining import NeuralNetworkTraining
 from Postprocessor import Postprocessor
-#add in where to modify the unseen energy
 from tensorboard.plugins.hparams import api as hp
 from os import makedirs
 import tensorflow as tf
