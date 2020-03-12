@@ -57,5 +57,5 @@ jobs:
           cd mphys-project/Standalone/
           rm -rf out/*
           rm -f gan4ds.out gan4ds.err
-          git pull origin deploy
+          git pull origin deploys
           nohup python3 -u Gan4DS.py > gan4ds.out 2> gan4ds.err < /dev/null &
