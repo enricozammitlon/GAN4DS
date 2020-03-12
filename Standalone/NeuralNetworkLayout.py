@@ -8,13 +8,11 @@ from os import makedirs
 from os.path import exists
 
 class NeuralNetworkLayout(object):
-    def __init__(self,gtrate,dtrate,glayers,dlayers,gnodes,dnodes,gdo,ddo,gbeta1,dbeta1,dimensions,noise,echeck,fileDir='out'):
+    def __init__(self,gtrate,dtrate,gnodes,dnodes,gdo,ddo,gbeta1,dbeta1,dimensions,noise,echeck,fileDir='out'):
         self.dir_output=fileDir
         self.gan_training_rate=gtrate
         self.d_training_rate=dtrate
         self.gan_nodes=gnodes
-        self.gan_layers=glayers
-        self.d_layers=dlayers
         self.d_nodes=dnodes
         self.gan_dropout=gdo
         self.d_dropout=ddo
@@ -34,20 +32,21 @@ class NeuralNetworkLayout(object):
         noise_in = Input((self.noise,))
         g1 = Dense(self.gan_nodes, activation="relu")(noise_in)
         g1 = Dropout(self.gan_dropout)(g1)
-        g1 = BatchNormalization()(g1)
-        g1 = Dropout(self.gan_dropout)(g1)
-        
+        g1 = Dense(self.gan_nodes, activation="relu")(g1)
+
         #Input of condition(eg. energy)
         hyper_in = Input((1,))
         g2 = Dense(self.gan_nodes, activation="relu")(hyper_in)
         g2 = Dropout(self.gan_dropout)(g2)
+        g2 = Dense(self.gan_nodes, activation="relu")(g1)
 
         gc = Concatenate()([g1, g2])
         gc = BatchNormalization()(gc)
 
-        for layer in range(self.gan_layers):
-            gc = Dense(self.gan_nodes , activation="relu")(gc)
-            gc = Dropout(self.gan_dropout)(gc)
+        gc = Dropout(self.gan_dropout)(gc)
+        gc = Dense(self.gan_nodes, activation="relu")(gc)
+        gc = Dropout(self.gan_dropout)(gc)
+        gc = Dense(self.gan_nodes, activation="relu")(gc)
 
         gc = Dense(self.dimensionality, activation="linear")(gc)
 
@@ -55,7 +54,7 @@ class NeuralNetworkLayout(object):
 
         if(verbose):
             gc.summary()
-        
+
         return gc
 
     def compileDiscriminator(self,verbose=False):
@@ -71,9 +70,14 @@ class NeuralNetworkLayout(object):
 
         dc = Concatenate()([d1, d2])
 
-        for layer in range(self.d_layers):
-            dc = Dense(self.d_nodes , activation="relu")(dc)
-            dc = Dropout(self.d_dropout)(dc)
+        dc = Dense(self.d_nodes , activation="relu")(dc)
+        dc = Dense(self.d_nodes , activation="relu")(dc)
+        dc = Dropout(self.d_dropout)(dc)
+        dc = LeakyReLU(0.2)(dc)
+        dc = Dense(self.d_nodes , activation="relu")(dc)
+        dc = Dropout(self.self.d_dropout)(dc)
+        dc = LeakyReLU(0.2)(dc)
+        dc = Dropout(self.self.d_dropout)(dc)
 
         dc = Dense(2, activation="softmax")(dc)
 
@@ -84,7 +88,7 @@ class NeuralNetworkLayout(object):
             dc.summary()
 
         return dc
-    
+
     def compileGAN(self,verbose=False):
         self.d=self.compileDiscriminator(verbose)
         self.g=self.compileGenerator(verbose)
@@ -109,7 +113,7 @@ class NeuralNetworkLayout(object):
             makedirs(self.dir_output+'/model/')
             makedirs(self.dir_output+'/model/logs/')
 
-        
+
 
         self.tensorboard = TensorBoard(
             log_dir=self.logdir,

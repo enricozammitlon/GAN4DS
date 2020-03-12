@@ -36,22 +36,26 @@ jobs:
   deploy:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    if: "contains(github.event.head_commit.message, '[DEPLOY]')"
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+    - name: Checking into Repository
+      uses: actions/checkout@v2
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
-
     - name: Started the job
-      uses: ./
+      uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.PASSWORD }}
+        password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
+        script_stop: true
         script: |
           cd /hepgpu5-data1/ricozl/ricozl/
           bash auto_export.sh
           source py3.6/bin/activate
-          rm -rf mphys-project/Standalone/out/*
-          nohup python3 mphys-project/Standalone/GAN4DS.py &
+          cd mphys-project/Standalone/
+          rm -rf out/*
+          rm -f gan4ds.out gan4ds.err
+          git pull origin deploys
+          nohup python3 -u Gan4DS.py > gan4ds.out 2> gan4ds.err < /dev/null &

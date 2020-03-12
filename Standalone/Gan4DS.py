@@ -9,12 +9,12 @@ import tensorflow as tf
 from os.path import exists
 
 variables_of_interest=['s1']
-energies=['1','10','20','40','60']
+energies=list(map(str, range(5,70)))
 unsen_energies=[]
 
-HP_NODES = hp.HParam('num_nodes', hp.Discrete([40, 50]))
-HP_LAYERS = hp.HParam('num_layers', hp.Discrete([2, 4]))
-HP_DROPOUT = hp.HParam('dropout', hp.RealInterval(0.1, 0.2))
+HP_D_NODES = hp.HParam('num_d_nodes', hp.Discrete([35, 45]))
+HP_G_NODES = hp.HParam('num_g_nodes', hp.Discrete([65, 75]))
+HP_DROPOUT = hp.HParam('dropout', hp.RealInterval(0.15, 0.25))
 
 METRIC_ACCURACY = 'accuracy'
 
@@ -25,15 +25,15 @@ logs_hyperparam_dir=pre.dir_output+'/logs/hyperparams'
 file_writer = tf.summary.create_file_writer(logs_hyperparam_dir)
 with file_writer.as_default():
   hp.hparams_config(
-    hparams=[HP_NODES, HP_LAYERS, HP_DROPOUT],
+    hparams=[HP_D_NODES, HP_G_NODES, HP_DROPOUT],
     metrics=[hp.Metric(METRIC_ACCURACY, display_name='Accuracy')],
   )
 makedirs(pre.dir_output+'/sessions')
 pre.dir_output+='/sessions'
 session_num = 0
-for nodes in HP_NODES.domain.values:
+for d_nodes in HP_D_NODES.domain.values:
   for dropout_rate in (HP_DROPOUT.domain.min_value, HP_DROPOUT.domain.max_value):
-    for layers in HP_LAYERS.domain.values:
+    for g_nodes in HP_G_NODES.domain.values:
       current_version=int(pre.getLatestVersion(pre.dir_output))+1
       dir_output=pre.dir_output+'/session_'+str(current_version)+"_"
       if not exists(dir_output):
@@ -43,17 +43,17 @@ for nodes in HP_NODES.domain.values:
         makedirs(dir_output+'/figures/final_product/')
 
       hparams = {
-          HP_NODES: nodes,
+          HP_D_NODES: d_nodes,
           HP_DROPOUT: dropout_rate,
-          HP_LAYERS: layers,
+          HP_G_NODES: g_nodes,
       }
       run_name = "session-%d" % session_num
       print('--- Starting session: %s' % run_name)
       print({h.name: hparams[h] for h in hparams})
 
       n=NeuralNetworkLayout(
-      gtrate=1e-4,dtrate=1e-4,glayers=hparams[HP_LAYERS],dlayers=hparams[HP_LAYERS],gnodes=hparams[HP_NODES],dnodes=hparams[HP_NODES],
-      gdo=hparams[HP_DROPOUT],ddo=hparams[HP_DROPOUT],gbeta1=0.9,dbeta1=0.9,dimensions=len(variables_of_interest),noise=100,echeck=20,fileDir=dir_output)
+      gtrate=5e-4,dtrate=5e-4,gnodes=hparams[HP_G_NODES],dnodes=hparams[HP_D_NODES],
+      gdo=hparams[HP_DROPOUT],ddo=hparams[HP_DROPOUT],gbeta1=0.3,dbeta1=0.3,dimensions=len(variables_of_interest),noise=1000,echeck=100,fileDir=dir_output)
 
       n.compileGAN(verbose=False)
       n.saveHyperParameters()
@@ -62,7 +62,7 @@ for nodes in HP_NODES.domain.values:
       unseen_data={k:pre.training_data[k] for k in pre.training_data if k in unsen_energies}
 
 
-      t=NeuralNetworkTraining(n,tds=trainable_data,bs=100,epochs=100,epochCheck=n.epochCheck,fileDir=dir_output,filewriter=file_writer)
+      t=NeuralNetworkTraining(n,tds=trainable_data,bs=1000,epochs=1500,epochCheck=n.epochCheck,fileDir=dir_output,filewriter=file_writer)
       t.initiateTraining()
 
       post=Postprocessor(t.all_epochs,t.d_acc,t.d_loss,dir_output,len(variables_of_interest))
@@ -74,3 +74,4 @@ for nodes in HP_NODES.domain.values:
         tf.summary.scalar(METRIC_ACCURACY, t.d_acc[-1], step=1)
 
       session_num += 1
+print("--JOB DONE--")
