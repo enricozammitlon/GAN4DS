@@ -27,7 +27,11 @@ class NeuralNetworkLayout(object):
         self.gan=None
 
     def compileComponent(self,verbose=False,component_type=None):
-        stream = open(self.layout_dir+"/discriminator_layout.yaml","r+")
+        if(component_type=='discriminator'):
+            stream = open(self.layout_dir+"/discriminator_layout.yaml","r+")
+        elif(component_type=='generator'):
+            stream = open(self.layout_dir+"/generator_layout.yaml","r+")
+
         data = yaml.load(stream)
         g1_instructions= data['join'][0]
         g2_instructions= data['join'][1]
@@ -39,7 +43,7 @@ class NeuralNetworkLayout(object):
             g_in_1 = Input((self.noise,))
             g_in_2 = Input((1,))
 
-        g1 = g_in_1
+        g1 = (g_in_1)
         for layer_info in g1_instructions['layers']:
             if(self.overrides.get('activation')):
                 activation = self.overrides.get('activation')
@@ -68,7 +72,7 @@ class NeuralNetworkLayout(object):
             elif(layer_info['layer_type']=='batchnorm'):
                 g1=BatchNormalization()(g1)
 
-        g2 = g_in_2
+        g2 = (g_in_2)
         for layer_info in g2_instructions['layers']:
             if(self.overrides.get('activation')):
                 activation = self.overrides.get('activation')

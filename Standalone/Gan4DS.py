@@ -75,7 +75,7 @@ for current_config in product(*hyperparams_limits):
       run_name = "session-%d" % session_num
       print('--- Starting session: %s' % run_name)
       print({h.name: hparams[h] for h in hparams})
-      current_overrides=hparams
+      current_overrides={h.name: hparams[h] for h in hparams}
       n=NeuralNetworkLayout(
       gtrate=g_rate,dtrate=d_rate,gbeta1=g_beta1,dbeta1=d_beta1,dimensions=len(variables_of_interest),noise=noise_size,echeck=epoch_check,fileDir=dir_output,overrides=current_overrides)
 

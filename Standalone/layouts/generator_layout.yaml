@@ -17,7 +17,7 @@ join:
       nodes: 20
       activation: relu
     #This is input from condition
-    layers:
+  - layers:
     #Program start with Input(condition) here, no need to add
     -
       layer_type: dense

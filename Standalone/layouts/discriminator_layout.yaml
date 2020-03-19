@@ -73,7 +73,3 @@ layers:
   -
     layer_type: dropout
     dropout_amount: 0.1
-  -
-    layer_type: dense
-    nodes: 2
-    activation: softmax

@@ -26,7 +26,7 @@ g_beta1:
 d_beta1:
   0.3
 verbose:
-  False
+  True
 overrides:
   d_nodes:
     [200,200]
