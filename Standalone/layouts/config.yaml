@@ -9,11 +9,11 @@ energies:
 epochs:
   7000
 epochCheck:
-  100
+  20
 batchSize:
-  1000
+  100
 noiseSize:
-  1000
+  100
 metric:
   - "accuracy"
   - "moments"
