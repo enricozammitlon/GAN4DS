@@ -6,92 +6,142 @@ from tensorflow.keras.callbacks import TensorBoard
 import tensorflow as tf
 from os import makedirs
 from os.path import exists
+import yaml
+from distutils.dir_util import copy_tree
 
 class NeuralNetworkLayout(object):
-    def __init__(self,gtrate,dtrate,gnodes,dnodes,gdo,ddo,gbeta1,dbeta1,dimensions,noise,echeck,fileDir='out'):
+    def __init__(self,gtrate,dtrate,gbeta1,dbeta1,dimensions,noise,echeck,overrides,layoutDir='layouts',fileDir='out'):
         self.dir_output=fileDir
         self.gan_training_rate=gtrate
         self.d_training_rate=dtrate
-        self.gan_nodes=gnodes
-        self.d_nodes=dnodes
-        self.gan_dropout=gdo
-        self.d_dropout=ddo
         self.gan_beta1=gbeta1
         self.d_beta1=dbeta1
         self.dimensionality=dimensions
         self.noise=noise
         self.epochCheck=echeck
         self.logdir=self.dir_output+'/model/logs/'
+        self.layout_dir=layoutDir
+        self.overrides=overrides
         self.d=None
         self.g=None
         self.gan=None
 
+    def compileComponent(self,verbose=False,component_type=None):
+        stream = open(self.layout_dir+"/discriminator_layout.yaml","r+")
+        data = yaml.load(stream)
+        g1_instructions= data['join'][0]
+        g2_instructions= data['join'][1]
+        gc_instructions = data['layers']
+        if(component_type=='discriminator'):
+            g_in_1 = Input((self.dimensionality,))
+            g_in_2 = Input((1,))
+        elif(component_type=='generator'):
+            g_in_1 = Input((self.noise,))
+            g_in_2 = Input((1,))
 
-    def compileGenerator(self,verbose=False):
-        #Input of noise to generator
-        noise_in = Input((self.noise,))
-        g1 = Dense(self.gan_nodes, activation="relu")(noise_in)
-        g1 = Dropout(self.gan_dropout)(g1)
-        g1 = Dense(self.gan_nodes, activation="relu")(g1)
+        g1 = g_in_1
+        for layer_info in g1_instructions['layers']:
+            if(self.overrides.get('activation')):
+                activation = self.overrides.get('activation')
+            else:
+                activation = layer_info.get('activation')
+            if(component_type=='discriminator' and self.overrides.get('d_nodes')):
+                units = self.overrides.get('d_nodes')
+            elif(component_type=='generator' and self.overrides.get('g_nodes')):
+                units = self.overrides.get('g_nodes')
+            else:
+                units =  layer_info.get('nodes')
+            if(self.overrides.get('dropout_amount')):
+                rate = self.overrides.get('dropout_amount')
+            else:
+                rate = layer_info.get('dropout_amount')
+            if(self.overrides.get('leaky_amount')):
+                alpha = self.overrides.get('leaky_amount')
+            else:
+                alpha = layer_info.get('leaky_amount')
+            if(layer_info['layer_type']=='dense'):
+                g1=Dense(units=units,activation=activation)(g1)
+            elif(layer_info['layer_type']=='dropout'):
+                g1=Dropout(rate=rate)(g1)
+            elif(layer_info['layer_type']=='selu'):
+                g1=LeakyReLU(alpha=alpha)(g1)
+            elif(layer_info['layer_type']=='batchnorm'):
+                g1=BatchNormalization()(g1)
 
-        #Input of condition(eg. energy)
-        hyper_in = Input((1,))
-        g2 = Dense(self.gan_nodes, activation="relu")(hyper_in)
-        g2 = Dropout(self.gan_dropout)(g2)
-        g2 = Dense(self.gan_nodes, activation="relu")(g1)
+        g2 = g_in_2
+        for layer_info in g2_instructions['layers']:
+            if(self.overrides.get('activation')):
+                activation = self.overrides.get('activation')
+            else:
+                activation = layer_info.get('activation')
+            if(component_type=='discriminator' and self.overrides.get('d_nodes')):
+                units = self.overrides.get('d_nodes')
+            elif(component_type=='generator' and self.overrides.get('g_nodes')):
+                units = self.overrides.get('g_nodes')
+            else:
+                units =  layer_info.get('nodes')
+            if(self.overrides.get('dropout_amount')):
+                rate = self.overrides.get('dropout_amount')
+            else:
+                rate = layer_info.get('dropout_amount')
+            if(self.overrides.get('leaky_amount')):
+                alpha = self.overrides.get('leaky_amount')
+            else:
+                alpha = layer_info.get('leaky_amount')
+            if(layer_info['layer_type']=='dense'):
+                g2=Dense(units=units,activation=activation)(g2)
+            elif(layer_info['layer_type']=='dropout'):
+                g2=Dropout(rate=rate)(g2)
+            elif(layer_info['layer_type']=='selu'):
+                g2=LeakyReLU(alpha=alpha)(g2)
+            elif(layer_info['layer_type']=='batchnorm'):
+                g2=BatchNormalization()(g2)
 
         gc = Concatenate()([g1, g2])
-        gc = BatchNormalization()(gc)
 
-        gc = Dropout(self.gan_dropout)(gc)
-        gc = Dense(self.gan_nodes, activation="relu")(gc)
-        gc = Dropout(self.gan_dropout)(gc)
-        gc = Dense(self.gan_nodes, activation="relu")(gc)
+        for layer_info in gc_instructions:
+            if(self.overrides.get('activation')):
+                activation = self.overrides.get('activation')
+            else:
+                activation = layer_info.get('activation')
+            if(component_type=='discriminator' and self.overrides.get('d_nodes')):
+                units = self.overrides.get('d_nodes')
+            elif(component_type=='generator' and self.overrides.get('g_nodes')):
+                units = self.overrides.get('g_nodes')
+            else:
+                units =  layer_info.get('nodes')
+            if(self.overrides.get('dropout_amount')):
+                rate = self.overrides.get('dropout_amount')
+            else:
+                rate = layer_info.get('dropout_amount')
+            if(self.overrides.get('leaky_amount')):
+                alpha = self.overrides.get('leaky_amount')
+            else:
+                alpha = layer_info.get('leaky_amount')
+            if(layer_info['layer_type']=='dense'):
+                gc=Dense(units=units,activation=activation)(gc)
+            elif(layer_info['layer_type']=='dropout'):
+                gc=Dropout(rate=rate)(gc)
+            elif(layer_info['layer_type']=='selu'):
+                gc=LeakyReLU(alpha=alpha)(gc)
+            elif(layer_info['layer_type']=='batchnorm'):
+                gc=BatchNormalization()(gc)
 
-        gc = Dense(self.dimensionality, activation="linear")(gc)
-
-        gc = Model(name="Generator", inputs=[noise_in, hyper_in], outputs=[gc])
+        if(component_type=='generator'):
+            gc = Dense(self.dimensionality, activation="linear")(gc)
+            gc = Model(name="Generator", inputs=[g_in_1, g_in_2], outputs=[gc])
+        elif(component_type=='discriminator'):
+            gc = Dense(2, activation="softmax")(gc)
+            gc = Model(name="Discriminator", inputs=[g_in_1, g_in_2], outputs=[gc])
+            gc.compile(loss="categorical_crossentropy", optimizer=Adam(self.d_training_rate, beta_1=self.d_beta1), metrics=["accuracy"])
 
         if(verbose):
             gc.summary()
-
         return gc
 
-    def compileDiscriminator(self,verbose=False):
-        #Input from generator
-        d1_in = Input((self.dimensionality,))
-        d1 = Dense(self.d_nodes, activation="relu")(d1_in)
-        d1 = Dropout(self.d_dropout)(d1)
-
-        #Input of condition(eg. energy)
-        hyper_in = Input((1,))
-        d2 = Dense(self.d_nodes, activation="relu")(hyper_in)
-        d2 = Dropout(self.d_dropout)(d2)
-
-        dc = Concatenate()([d1, d2])
-
-        dc = Dense(self.d_nodes , activation="relu")(dc)
-        dc = Dense(self.d_nodes , activation="relu")(dc)
-        dc = Dropout(self.d_dropout)(dc)
-        dc = LeakyReLU(0.2)(dc)
-        dc = Dense(self.d_nodes , activation="relu")(dc)
-        dc = Dropout(self.d_dropout)(dc)
-        dc = LeakyReLU(0.2)(dc)
-        dc = Dropout(self.d_dropout)(dc)
-
-        dc = Dense(2, activation="softmax")(dc)
-
-        dc = Model(name="Discriminator", inputs=[d1_in, hyper_in], outputs=[dc])
-        dc.compile(loss="categorical_crossentropy", optimizer=Adam(self.d_training_rate, beta_1=self.d_beta1), metrics=["accuracy"])
-
-        if(verbose):
-            dc.summary()
-
-        return dc
-
     def compileGAN(self,verbose=False):
-        self.d=self.compileDiscriminator(verbose)
-        self.g=self.compileGenerator(verbose)
+        self.d=self.compileComponent(verbose,component_type='discriminator')
+        self.g=self.compileComponent(verbose,component_type='generator')
 
         hyper_in = Input((1,))
         noise_in = Input((self.noise,))
@@ -108,12 +158,13 @@ class NeuralNetworkLayout(object):
         pass
 
     def saveHyperParameters(self):
+        if not exists(self.dir_output+'/layouts/'):
+            makedirs(self.dir_output+'/layouts/')
+        copy_tree('./layouts/', self.dir_output+'/layouts/')
 
         if not exists(self.dir_output+'/model/'):
             makedirs(self.dir_output+'/model/')
             makedirs(self.dir_output+'/model/logs/')
-
-
 
         self.tensorboard = TensorBoard(
             log_dir=self.logdir,

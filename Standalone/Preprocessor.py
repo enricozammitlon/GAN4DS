@@ -19,14 +19,12 @@ class Preprocessor:
         self.training_data=self.getData(v)
 
     def getLatestVersion(self,folder):
-        lastFile = [f for f in listdir(folder) if isdir(join(folder, f))]
+        lastFile = [int(f.split('_')[1]) for f in listdir(folder) if isdir(join(folder, f))]
+        lastFile.sort()
         if(len(lastFile)<1):
             return "0"
         else:
-            lastFile=lastFile[0]
-            begin = lastFile.find('_')+1
-            end = lastFile.find('_',begin)
-            version = lastFile[begin:end]
+            version = lastFile[-1]
         return version
 
     #Convert root to numpy arrays of variables of interest

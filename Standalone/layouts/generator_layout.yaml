@@ -1,8 +1,8 @@
 join:
   -
-    #This is input from generator
+    #This is input from noise
     layers:
-    #Program start with Input(gen) here, no need to add
+    #Program start with Input(noise) here, no need to add
     -
       layer_type: dense
       nodes: 20
@@ -10,8 +10,12 @@ join:
     -
       layer_type: dropout
       dropout_amount: 0.1
+    -
+      layer_type: dense
+      nodes: 20
+      activation: relu
     #This is input from condition
-  - layers:
+    layers:
     #Program start with Input(condition) here, no need to add
     -
       layer_type: dense
@@ -20,21 +24,16 @@ join:
     -
       layer_type: dropout
       dropout_amount: 0.1
+    -
+      layer_type: dense
+      nodes: 20
+      dropout_amount: 0.1
 layers:
   -
-    layer_type: dense
-    nodes: 20
-    activation: relu
-  -
-    layer_type: dense
-    nodes: 20
-    activation: relu
+    layer_type: batchnorm
   -
     layer_type: dropout
     dropout_amount: 0.1
-  -
-    layer_type: selu
-    leaky_amount: 0.2
   -
     layer_type: dense
     nodes: 20
@@ -42,13 +41,5 @@ layers:
   -
     layer_type: dropout
     dropout_amount: 0.1
-  -
-    layer_type: selu
-    leaky_amount: 0.2
-  -
-    layer_type: dropout
-    dropout_amount: 0.1
-  -
-    layer_type: dense
-    nodes: 2
-    activation: softmax
+
+    #There is always an implied Dense(dimensionality, activation="linear") at the end

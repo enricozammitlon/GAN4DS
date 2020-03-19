@@ -6,10 +6,53 @@ mapping:
     sequence:
     - type: str
   energies:
-    type: seq
-    sequence:
-    - type: int
+    type: map
+    mapping:
+      range:
+        type: seq
+        sequence:
+        - type: int
+      exact:
+        type: seq
+        sequence:
+        - type: int
+      single:
+        type: int
   epochs:
     type: int
   epochCheck:
     type: int
+  batchSize:
+    type: int
+  noiseSize:
+    type: int
+  g_rate:
+    type: float
+  d_rate:
+    type: float
+  g_beta1:
+    type: float
+  d_beta1:
+    type: float
+  verbose:
+    type: bool
+  metric:
+    type: seq
+    sequence:
+    - type: str
+  overrides:
+    type: map
+    mapping:
+      d_nodes:
+        type: seq
+        sequence:
+        - type: int
+      g_nodes:
+        type: seq
+        sequence:
+        - type: int
+      dropout:
+        type: seq
+        sequence:
+        - type: float
+
