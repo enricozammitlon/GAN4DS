@@ -4,12 +4,12 @@ variables_of_interest:
   - "f200like"
 energies:
   range:
-    - 10
-    - 20
+    - 2
+    - 70
 epochs:
-  4
+  7000
 epochCheck:
-  4
+  20
 batchSize:
   1000
 noiseSize:
@@ -27,10 +27,10 @@ d_beta1:
   0.3
 verbose:
   False
-overrides:
+#overrides:
   d_nodes:
-    [15,25]
+    [200,200]
   g_nodes:
-    [65,75]
+    [200,200]
   dropout:
     [0.1,0.2]
