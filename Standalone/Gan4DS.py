@@ -82,7 +82,7 @@ for current_config in product(*hyperparams_limits):
       n.compileGAN(verbose)
       n.saveHyperParameters()
 
-      t=NeuralNetworkTraining(n,tds=pre.training_data,bs=batch_size,epochs=epoch_check,epochCheck=n.epochCheck,fileDir=dir_output,filewriter=file_writer)
+      t=NeuralNetworkTraining(n,tds=pre.training_data,bs=batch_size,epochs=epochs,epochCheck=n.epochCheck,fileDir=dir_output,filewriter=file_writer)
       t.initiateTraining()
 
       post=Postprocessor(t.all_epochs,t.d_acc,t.d_loss,dir_output,len(variables_of_interest))

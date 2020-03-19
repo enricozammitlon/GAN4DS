@@ -9,7 +9,7 @@ energies:
 epochs:
   7000
 epochCheck:
-  20
+  100
 batchSize:
   1000
 noiseSize:
@@ -29,8 +29,8 @@ verbose:
   False
 overrides:
   d_nodes:
-    [200,200]
+    [150,200]
   g_nodes:
-    [200,200]
+    [150,200]
   dropout:
     [0.1,0.2]
