@@ -11,9 +11,9 @@ epochs:
 epochCheck:
   20
 batchSize:
-  100
+  1000
 noiseSize:
-  100
+  1000
 metric:
   - "accuracy"
   - "moments"
@@ -29,8 +29,8 @@ verbose:
   False
 overrides:
   d_nodes:
-    [150,200]
+    [200,200]
   g_nodes:
-    [150,200]
+    [200,200]
   dropout:
-    [0.1,0.2]
+    [0.2,0.2]
