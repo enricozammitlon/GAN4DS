@@ -33,4 +33,4 @@ overrides:
   g_nodes:
     [65,80]
   dropout:
-    [0.1,0.2]
+    [0.15,0.2]
