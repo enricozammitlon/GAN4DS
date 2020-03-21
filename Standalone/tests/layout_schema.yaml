@@ -1,0 +1,34 @@
+# Schema
+schema;gan_layers:
+  type: seq
+  sequence:
+  - type: map
+    mapping:
+      variable:
+        type: bool
+      layer_type:
+        required: True
+        type: str
+        enum: ['input','selu','dense', 'dropout', 'batchnorm']
+      nodes:
+        type: int
+      activation:
+        type: str
+        enum : ['relu','softmax','sigmoid','tanh']
+      dropout_amount:
+        type: float
+      leaky_amount:
+        type: float
+
+# Discriminator and Generator File Schema
+type: map
+mapping:
+  layers:
+    include: gan_layers
+  join:
+    type: seq
+    sequence:
+    - type: map
+      mapping:
+        layers:
+          include: gan_layers

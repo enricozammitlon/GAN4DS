@@ -31,6 +31,8 @@ jobs:
         cd Standalone/tests
         pwd
         python3 discriminator_test.py
+        python3 config_test.py
+        python3 generator_test.py
         
   # This workflow contains a job called "deploy"
   deploy:

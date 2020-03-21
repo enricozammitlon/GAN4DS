@@ -16,30 +16,38 @@ class Preprocessor:
         self.current_version=int(self.getLatestVersion(self.dir_output))+1
         self.dir_output+='/run_'+str(self.current_version)+"_"
         makedirs(self.dir_output)
-        self.training_data=self.getData(v)
+        self.training_data=self.getData(variables)
 
     def getLatestVersion(self,folder):
-        lastFile = [f for f in listdir(folder) if isdir(join(folder, f))]
+        lastFile = [int(f.split('_')[1]) for f in listdir(folder) if isdir(join(folder, f))]
+        lastFile.sort()
         if(len(lastFile)<1):
             return "0"
         else:
-            lastFile=lastFile[0]
-            begin = lastFile.find('_')+1
-            end = lastFile.find('_',begin)
-            version = lastFile[begin:end]
+            version = lastFile[-1]
         return version
 
     #Convert root to numpy arrays of variables of interest
-    def getData(self,verbose=False):
+    def getData(self,vars_of_interest):
         allTrees={}
         for energy in self.energies:
             allTrees[energy]=pickle.load( open( self.dir_input+"/outRun_"+energy+".p", "rb" ) )
         result={}
         for key,value in allTrees.items():
-          filt_value = {k2:v2 for k2,v2 in value.items() if k2 in self.variables_of_interest}
+          filt_value = {k2:v2 for k2,v2 in value.items() if k2 in vars_of_interest}
           if(filt_value):
             result[key]=filt_value
         return result
+
+    def getConditions(self,num):
+        conditions=[]
+        for var in range(num):
+            currentCond=[]
+            for en in self.training_data:
+                currentCond.append(self.training_data[en][self.variables_of_interest[var]])
+            conditions.append(currentCond)
+        return conditions
+
     #Remember to add in units on plots
     def obtainUnits(self):
         pass
@@ -61,3 +69,4 @@ class Preprocessor:
             plt.title(source.capitalize()+" data for "+variable.capitalize())
             if(save):
                 plt.savefig(self.dir_output+'/figures/'+source+"_data_"+variable+".png")
+                plt.close()
