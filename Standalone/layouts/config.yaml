@@ -7,7 +7,7 @@ energies:
     - 5
     - 70
 epochs:
-  10000
+  2000
 epochCheck:
   100
 batchSize:
