@@ -118,8 +118,8 @@ for current_config in product(*hyperparams_limits):
       METRIC_SECOND_MOMENT = 'Second Moment '+var
       e=[epoch for epoch in range(0,len(t.all_epochs)) if epoch == 0 or (epoch+1) % t.epochCheck == 0]
       for i in e:
-        tf.summary.scalar(METRIC_FIRST_MOMENT, t.d_x[i], step=e[i]*t.epochCheck)
-        tf.summary.scalar(METRIC_SECOND_MOMENT, t.d_x2[i], step=e[i]*t.epochCheck)
+        tf.summary.scalar(METRIC_FIRST_MOMENT, t.d_x[i], step=i)
+        tf.summary.scalar(METRIC_SECOND_MOMENT, t.d_x2[i], step=i)
     file_writer2.flush()
   session_num += 1
 print("--JOB DONE--")
