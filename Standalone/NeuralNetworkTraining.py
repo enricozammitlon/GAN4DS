@@ -182,7 +182,7 @@ class NeuralNetworkTraining:
         if(self.metric(true_histograms,generated_histograms)):
             print('\tNew minimum found here.')
             self.final_produced=all_gends
-            self.gan.save(self.dir_output+'/model/'+"weights.h5")
+            self.gan.save(self.dir_output+'/model/'+self.variables_of_interest[-1]+"_weights.h5")
 
     def initiateTraining(self):
         bar = IncrementalBar('Training', max=self.epochs)
@@ -242,7 +242,7 @@ class NeuralNetworkTraining:
                             self.generated_ds[self.energies[en-1]][var]=np.concatenate([self.generated_ds[self.energies[en-1]][var],gen_energies_var])
 
                 if(self.epoch+self.epochCheck>=self.epochs):
-                    self.last=True
+                  self.last=True
                 #Set instead of 3 the number of candidates to show
                 indexes=np.round(np.linspace(0, len(self.energies) - 1, 3)).astype(int)
                 selected_energies=[self.energies[i] for i in range(len(self.energies)) if i in indexes]
