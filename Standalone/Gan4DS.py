@@ -127,6 +127,9 @@ for current_config in product(*hyperparams_limits):
             tf.summary.scalar(METRIC_ACCURACY, t.d_acc[-1], step=1)
             METRIC_FIRST_MOMENT = 'First Moment '+var
             METRIC_SECOND_MOMENT = 'Second Moment '+var
+            tf.summary.scalar(METRIC_FIRST_MOMENT, t.d_x[-1], step=1)
+            tf.summary.scalar(METRIC_SECOND_MOMENT, t.d_x2[-1], step=1)
+ 
             '''
             e=[epoch for epoch in range(0,len(t.all_epochs)) if epoch == 0 or (epoch+1) % t.epochCheck == 0]
             for i in e:
