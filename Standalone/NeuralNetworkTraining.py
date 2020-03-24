@@ -182,7 +182,7 @@ class NeuralNetworkTraining:
         if(self.metric(true_histograms,generated_histograms)):
             print('\tNew minimum found here.')
             self.final_produced=all_gends
-            self.gan.save(self.dir_output+'/model/'+self.variables_of_interest[-1]+"_weights.h5")
+            self.layout.g.save(self.dir_output+'/model/'+self.variables_of_interest[-1]+"_weights.h5")
 
     def initiateTraining(self):
         bar = IncrementalBar('Training', max=self.epochs)
