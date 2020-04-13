@@ -99,9 +99,22 @@ for current_config in product(*hyperparams_limits):
     current_overrides = {h.name: hparams[h] for h in hparams}
     conditions = []
     for num, var in enumerate(variables_of_interest):
+        if exists("./layouts/"+var+"/subconfig.yaml"):
+            stream = open("./layouts/"+var+"/subconfig.yaml", "r+")
+            data = yaml.load(stream, Loader=yaml.FullLoader)
+            g_rate = data['g_rate']
+            d_rate = data['d_rate']
+            g_beta1 = data['g_beta1']
+            d_beta1 = data['d_beta1']
+            verbose = data['verbose']
+            d_nodes = data['d_nodes']
+            g_nodes = data['g_nodes']
+            dropout = data['dropout']
+            current_overrides = {'g_nodes': g_nodes,
+                                 'd_nodes': d_nodes, 'dropout': dropout}
         pre.training_data = pre.getData([var])
-        n = NeuralNetworkLayout(
-            gtrate=g_rate, dtrate=d_rate, gbeta1=g_beta1, dbeta1=d_beta1, dimensions=num+1, noise=noise_size, echeck=epoch_check, fileDir=dir_output, overrides=current_overrides)
+        n = NeuralNetworkLayout(layoutDir="layouts/"+var,
+                                gtrate=g_rate, dtrate=d_rate, gbeta1=g_beta1, dbeta1=d_beta1, dimensions=num+1, noise=noise_size, echeck=epoch_check, fileDir=dir_output, overrides=current_overrides)
 
         n.compileGAN(verbose)
         n.saveHyperParameters()
@@ -129,7 +142,7 @@ for current_config in product(*hyperparams_limits):
             METRIC_SECOND_MOMENT = 'Second Moment '+var
             tf.summary.scalar(METRIC_FIRST_MOMENT, t.d_x[-1], step=1)
             tf.summary.scalar(METRIC_SECOND_MOMENT, t.d_x2[-1], step=1)
- 
+
             '''
             e=[epoch for epoch in range(0,len(t.all_epochs)) if epoch == 0 or (epoch+1) % t.epochCheck == 0]
             for i in e:

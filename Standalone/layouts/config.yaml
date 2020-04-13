@@ -5,9 +5,9 @@ variables_of_interest:
 energies:
   range:
     - 5
-    - 70
+    - 235
 epochs:
-  2000
+  10000
 epochCheck:
   100
 batchSize:
@@ -16,6 +16,7 @@ noiseSize:
   1000
 metric:
   - "accuracy"
+  - "moments"
 g_rate:
   0.0005
 d_rate:
@@ -32,4 +33,4 @@ overrides:
   g_nodes:
     [65,80]
   dropout:
-    [0.15,0.2]
+    [0.1,0.2]
