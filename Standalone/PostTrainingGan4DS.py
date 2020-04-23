@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 import numpy as np
+import matplotlib as mpl
 
 def getData(energies, variables_of_interest):
     allTrees = {}
@@ -125,7 +126,7 @@ epochs = data['epochs']
 epoch_check = data['epochCheck']
 conditions = []
 allNorms = []
-
+'''
 for var in variables_of_interest:
     print('Current variable: '+var)
     model = tf.keras.models.load_model("../G4_RUNS/serial_architecture/working_3D_cgan_s1_s2_f200/sessions/session_1_/model/"+var+"_weights.model")
@@ -175,36 +176,99 @@ for var in variables_of_interest:
 
 all_stuff={'data':conditions,'normalisation':allNorms}
 pickle.dump( all_stuff, open("./final_result/testing_data.p", "wb" ) )
-
-conditions = pickle.load(
+'''
+all_stuff = pickle.load(
             open("./final_result/testing_data.p", "rb"))
-plt.figure()
-selected_energies=get_distributed_energies('sampling_distributions/Ar_c1dat_m2-5.dat')
-#selected_energies = [str(e) for e in selected_energies]
-for num,cond in enumerate(conditions):
-    conditions[num]=[conditions[num][s] for s in selected_energies]
+masses=["3"]
+for mass in masses:
+    conditions=all_stuff['data']
+    allNorms=all_stuff['normalisation']
 
-for num in range(len(allNorms)):
-    allNorms[num]= np.asarray(np.ones(len(conditions[0]))*allNorms[num][0])
-# order is [s1,s2,f200]
-# This graph is f200 vs s1
-x = np.concatenate(np.dot(conditions[-1], allNorms[-1][0]))
-y = np.concatenate(np.dot(conditions[0], allNorms[0][0]))
-plt.hist2d(x, y, bins=100)
-plt.xlabel("f200[NPE]", size=11, labelpad=5)
-plt.ylabel("S1[NPE]", size=11, labelpad=5, rotation="vertical")
-plt.title(f"F200 vs S1")
-plt.savefig('./final_result/f200_vs_s1.png')
-plt.close()
-plt.figure()
-# order is [s1,s2,f200]
-# This graph is f200 vs s1
-x = np.concatenate(np.dot(conditions[-1], allNorms[-1][0]))
-y = np.divide(np.concatenate(np.dot(conditions[0], allNorms[0][0])), np.concatenate(
-    np.dot(conditions[1], allNorms[1][0])))
-plt.hist2d(x, y, bins=100)
-plt.xlabel("f200[NPE]", size=11, labelpad=5)
-plt.ylabel("S1/S2", size=11, labelpad=5, rotation="vertical")
-plt.title(f"F200 vs S1/S2")
-plt.savefig('./final_result/f200_vs_s1_over_s2.png')
-plt.close()
+    selected_energies=get_distributed_energies('sampling_distributions/Ar_c1dat_m'+mass+'.dat')
+    #selected_energies = [str(e) for e in selected_energies]
+    mass=mass.replace('-','.')
+    for num,cond in enumerate(conditions):
+        conditions[num]=[conditions[num][s]*allNorms[num][s] for s in selected_energies]
+
+
+    # order is [s1,s2,f200]
+    # This graph is f200 vs s1
+    training_ds = getData([str(e) for e in selected_energies], ['s1','s2','f200like'])
+
+    x = training_ds['15']['s1']
+    plt.hist(x,bins=200,density=True)
+    plt.ylabel(r'$\rho (x)$', size=11, labelpad=5, rotation="vertical")
+    plt.xlabel("S1[NPE]", size=11, labelpad=5)
+    plt.title(f"S1")
+    plt.savefig('./final_result/s1_training.png')
+    plt.close()
+    plt.figure()
+
+    x = np.array(conditions[0][15])
+    plt.hist(x,bins=200,density=True)
+    plt.ylabel(r'$\rho (x)$', size=11, labelpad=5, rotation="vertical")
+    plt.xlabel(r"$S_1$ (NPE])", size=11, labelpad=5)
+    plt.title(f"S1")
+    plt.savefig('./final_result/s1_test.png')
+    plt.close()
+    plt.figure()
+
+    current_energies = list(training_ds.keys())
+    current_variables_of_interest = list(training_ds[current_energies[0]].keys())
+    y=[]
+    x=[]
+    for i in current_energies:
+        y.append(training_ds[i]['f200like'])
+        x.append(training_ds[i]['s1'])
+    y = np.concatenate(y)
+    x = np.concatenate(x)
+    h= plt.hist2d(x, y,range= [[0, 600], [0.2, 1]],bins=[100,100],norm=mpl.colors.LogNorm(),cmap=plt.get_cmap("jet"))
+    plt.colorbar(h[3])
+    plt.ylabel(r"$f_{200}$", size=11, labelpad=5, rotation="vertical")
+    plt.xlabel("$S_1$(NPE)", size=11, labelpad=5)
+    plt.title(rf"G4DS $log(m)=%s$ $f_{200}$ vs $S_1$"%(mass))
+    plt.savefig('./final_result/'+mass+'_g4_f200_vs_s1.png')
+    plt.close()
+    plt.figure()
+
+    y = np.array(conditions[-1])
+    x = np.array(conditions[0])
+    h= plt.hist2d(np.concatenate(x), np.concatenate(y),range= [[0, 600], [0.2, 1]],bins=[100,100],norm=mpl.colors.LogNorm(),cmap=plt.get_cmap("jet"))
+    plt.colorbar(h[3])
+    plt.ylabel(r"$f_{200}$", size=11, labelpad=5, rotation="vertical")
+    plt.xlabel(r"$S_1$(NPE)", size=11, labelpad=5)
+    plt.title(rf"GAN $log(m)=%s$ $f_{200}$ vs $S_1$"%(mass))
+    plt.savefig('./final_result/'+mass+'_gan_f200_vs_s1.png')
+    plt.close()
+    plt.figure()
+    # order is [s1,s2,f200]
+    # This graph is f200 vs s1
+
+    current_energies = list(training_ds.keys())
+    current_variables_of_interest = list(training_ds[current_energies[0]].keys())
+    y=[]
+    x=[]
+    for i in current_energies:
+        x.append(training_ds[i]['s1'])
+        y.append(np.log(np.divide(np.array(training_ds[i]['s2']),np.array(training_ds[i]['s1']))))
+
+    y = np.concatenate(y)
+    x = np.concatenate(x)
+
+    h=plt.scatter(x, y,s=1)
+    plt.xlabel(r"$S_1$(NPE)", size=11, labelpad=5)
+    plt.ylabel(r"$log(S_2/S_1)$", size=11, labelpad=5)
+    plt.title(rf"G4DS $log(m)=%s$ $log(S_2/S_1)$ vs $S_1$"%(mass))
+    plt.savefig('./final_result/'+mass+'_g4_s1_over_s2_vs_s1.png')
+    plt.close()
+
+    x = np.array(conditions[0])
+    y = np.log(np.divide(np.array(conditions[1]),np.array(conditions[0])))
+    y = np.concatenate(y)
+    x = np.concatenate(x)
+    h=plt.scatter(x, y,s=1)
+    plt.xlabel(r"$S_1$(NPE)", size=11, labelpad=5)
+    plt.ylabel(r"$log(S_2/S_1)$", size=11, labelpad=5)
+    plt.title(rf"GAN $log(m)=%s$ $log(S_2/S_1)$ vs $S_1$"%(mass))
+    plt.savefig('./final_result/'+mass+'_gan_s1_over_s2_vs_s1.png')
+    plt.close()
