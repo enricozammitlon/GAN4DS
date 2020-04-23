@@ -171,10 +171,11 @@ for var in variables_of_interest:
     conditions.append(currentCond)
     allNorms.append(normalisation)
 
+pickle.dump( conditions, open("./final_result/testing_data.p", "wb" ) )
 plt.figure()
 selected_energies=get_distributed_energies('sampling_distributions/Ar_c1dat_m2-5.dat')
 #selected_energies = [str(e) for e in selected_energies]
-for num,cond in conditions:
+for num,cond in enumerate(conditions):
     conditions[num]=[data[s] for s in selected_energies]
 # order is [s1,s2,f200]
 # This graph is f200 vs s1
