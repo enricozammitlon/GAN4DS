@@ -11,6 +11,7 @@ from itertools import product, permutations, combinations
 from pathlib import Path
 import shutil
 import subprocess
+import pickle
 
 process = subprocess.Popen(['tensorboard', '--logdir', 'out/'])
 stream = open("./layouts/config.yaml", "r+")
@@ -132,6 +133,13 @@ for current_config in product(*hyperparams_limits):
         post = Postprocessor(t.all_epochs, t.epochCheck, t.d_acc,
                              t.d_loss, t.d_x, t.d_x2, var, dir_output, len([var]))
         post.createAnimation()
+
+        dirpath = Path(dir_output+'/data_logs')
+        if not (dirpath.exists()):
+            makedirs(dirpath)
+        subdata=[t.d_x,t.d_x2,t.d_acc,t.d_loss]
+        all_stuff={'data':latest_generated_data,'metrics':subdata}
+        pickle.dump( all_stuff, open(dir_output+'/data_logs/data_log_'+var, "wb" ) )
 
         file_writer2 = tf.summary.create_file_writer(
             logs_hyperparam_dir+'/'+str(session_num))
