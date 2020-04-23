@@ -45,6 +45,7 @@ def get_distributed_energies(path):
     plt.title("Random Sample from Distribution")
     plt.savefig(path.replace('.dat','.png'))
     plt.close()
+    random_from_cdf = random_from_cdf.astype('S')
     return random_from_cdf
 
 def get_train_data(energies, variables_of_interest, training_ds, batch_size, conditions):
