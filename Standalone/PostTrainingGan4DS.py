@@ -1,15 +1,17 @@
+from __future__ import division
 import tensorflow as tf
 import pickle
 import yaml
 import numpy as np
 import matplotlib.pyplot as plt
-
+import csv
+import numpy as np
 
 def getData(energies, variables_of_interest):
     allTrees = {}
     for energy in energies:
         allTrees[energy] = pickle.load(
-            open("in/pickles/outRun_"+energy+".p", "rb"))
+            open("in/pickles/outRun_"+str(energy)+".p", "rb"))
     result = {}
     for key, value in allTrees.items():
         filt_value = {k2: v2 for k2,
@@ -18,6 +20,32 @@ def getData(energies, variables_of_interest):
             result[key] = filt_value
     return result
 
+def get_distributed_energies(path):
+    with open(path, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=' ',quoting=csv.QUOTE_NONNUMERIC)
+        distribution={'midpoint':[],'count':[]}
+        for row in reader:
+            distribution['midpoint'].append(row[0])
+            distribution['count'].append(row[1])
+
+    data = distribution['count']
+    hist, bins = np.histogram(distribution['midpoint'],bins=200,weights=data)
+
+    bin_midpoints = bins[:-1] + np.diff(bins)/2
+    cdf = np.cumsum(hist)
+    cdf = cdf / cdf[-1]
+    values = np.random.rand(1000)
+    value_bins = np.searchsorted(cdf, values)
+    random_from_cdf = np.asarray(bin_midpoints[value_bins]).astype(int)
+    plt.subplot(121)
+    plt.hist(distribution['midpoint'],bins=50,weights=data)
+    plt.title("Distribution")
+    plt.subplot(122)
+    plt.hist(random_from_cdf, 50)
+    plt.title("Random Sample from Distribution")
+    plt.savefig(path.replace('.dat','.png'))
+    plt.close()
+    return random_from_cdf
 
 def get_train_data(energies, variables_of_interest, training_ds, batch_size, conditions):
     batches = []
@@ -91,15 +119,15 @@ if(isinstance(energies_inputted, dict)):
             'range')[0], energies_inputted.get('range')[1])))
     if(energies_inputted.get('exact')):
         energies = list(map(str, energies_inputted.get('exact')))
-batch_size = data['batchSize']
-noise_size = data['noiseSize']
+batch_size = 1000
+noise_size = 1000
 epochs = data['epochs']
 epoch_check = data['epochCheck']
 conditions = []
 allNorms = []
 for var in variables_of_interest:
-    model = tf.keras.models.load_model("./out/"+currentRun+"/sessions/" +
-                                       currentSession+"/model/"+var+"_weights.model")
+    model = tf.keras.models.load_model("../G4_RUNS/serial_architecture/working_3D_cgan_s1_s2_f200/sessions/session_1_/model/"+var+"_weights.model")
+    energies=get_distributed_energies('sampling_distributions/Ar_c1dat_m2-5.dat')
     training_ds = getData(energies, [var])
     current_energies = list(training_ds.keys())
     current_variables_of_interest = list(training_ds[energies[0]].keys())
