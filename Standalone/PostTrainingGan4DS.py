@@ -127,6 +127,7 @@ conditions = []
 allNorms = []
 
 for var in variables_of_interest:
+    print('Current variable: '+var)
     model = tf.keras.models.load_model("../G4_RUNS/serial_architecture/working_3D_cgan_s1_s2_f200/sessions/session_1_/model/"+var+"_weights.model")
     training_ds = getData(energies, [var])
     current_energies = list(training_ds.keys())
@@ -172,7 +173,7 @@ for var in variables_of_interest:
     conditions.append(currentCond)
     allNorms.append(normalisation)
 
-all_stuff={conditions,allNorms}
+all_stuff={'data':conditions,'normalisation':allNorms}
 pickle.dump( all_stuff, open("./final_result/testing_data.p", "wb" ) )
 
 conditions = pickle.load(
