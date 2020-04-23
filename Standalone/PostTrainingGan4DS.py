@@ -125,6 +125,7 @@ epochs = data['epochs']
 epoch_check = data['epochCheck']
 conditions = []
 allNorms = []
+
 for var in variables_of_interest:
     model = tf.keras.models.load_model("../G4_RUNS/serial_architecture/working_3D_cgan_s1_s2_f200/sessions/session_1_/model/"+var+"_weights.model")
     training_ds = getData(energies, [var])
@@ -171,12 +172,19 @@ for var in variables_of_interest:
     conditions.append(currentCond)
     allNorms.append(normalisation)
 
-pickle.dump( conditions, open("./final_result/testing_data.p", "wb" ) )
+all_stuff={conditions,allNorms}
+pickle.dump( all_stuff, open("./final_result/testing_data.p", "wb" ) )
+
+conditions = pickle.load(
+            open("./final_result/testing_data.p", "rb"))
 plt.figure()
 selected_energies=get_distributed_energies('sampling_distributions/Ar_c1dat_m2-5.dat')
 #selected_energies = [str(e) for e in selected_energies]
 for num,cond in enumerate(conditions):
-    conditions[num]=[data[s] for s in selected_energies]
+    conditions[num]=[conditions[num][s] for s in selected_energies]
+
+for num in range(len(allNorms)):
+    allNorms[num]= np.asarray(np.ones(len(conditions[0]))*allNorms[num][0])
 # order is [s1,s2,f200]
 # This graph is f200 vs s1
 x = np.concatenate(np.dot(conditions[-1], allNorms[-1][0]))
