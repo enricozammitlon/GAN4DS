@@ -8,7 +8,8 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "program": "Gan4DS.py",
+            "cwd": "${workspaceFolder}/Standalone",
+            "program": "${file}",
             "console": "integratedTerminal"
         }
     ]

@@ -1,0 +1,35 @@
+variables_of_interest:
+  - "s1"
+  - "s2"
+  - "f200like"
+energies:
+  range:
+    - 5
+    - 70
+epochs:
+  2000
+epochCheck:
+  100
+batchSize:
+  1000
+noiseSize:
+  1000
+metric:
+  - "accuracy"
+g_rate:
+  0.0005
+d_rate:
+  0.0005
+g_beta1:
+  0.3
+d_beta1:
+  0.3
+verbose:
+  False
+overrides:
+  d_nodes:
+    [15,30]
+  g_nodes:
+    [65,80]
+  dropout:
+    [0.15,0.2]
