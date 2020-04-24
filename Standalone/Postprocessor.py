@@ -21,7 +21,7 @@ class Postprocessor :
         self.dir_out=dirOut
         self.var=var_of_interest
         self.dimensionality=dimensionality
-        e=[epoch*self.epochCheck for epoch in range(0,len(epochs)) if epoch == 0 or (epoch+1) % self.epochCheck == 0]
+        e=[epoch for epoch in range(0,len(epochs)) if epoch == 0 or (epoch+1) % self.epochCheck == 0]
         del self.epochs[0]
         del self.d_loss[0]
         del self.d_acc[0]
@@ -51,7 +51,7 @@ class Postprocessor :
         plt.xlabel("Epoch number", size=11, labelpad=5)
         plt.ylabel("First Moment Ratio", size=11, labelpad=5, rotation="vertical")
         plt.title(f"Disciminator moment 1 Ratio for "+var+" in"+str(self.dimensionality)+"D cGAN")
-        plt.legend(loc="center right", fontsize=11)
+        plt.legend(fontsize=11)
         if(save):
             plt.savefig(self.dir_out+'/figures/final_product/'+var+"_moment_1_graph_"+str(self.dimensionality)+"D_cGAN.png")
             plt.close()
@@ -61,7 +61,7 @@ class Postprocessor :
         plt.xlabel("Epoch number", size=11, labelpad=5)
         plt.ylabel("Second Moment Ratio", size=11, labelpad=5, rotation="vertical")
         plt.title(f"Disciminator moment 2 Ratio for "+var+"in"+str(self.dimensionality)+"D cGAN")
-        plt.legend(loc="center right", fontsize=11)
+        plt.legend(fontsize=11)
         if(save):
             plt.savefig(self.dir_out+'/figures/final_product/'+var+"_moment_2_graph_"+str(self.dimensionality)+"D_cGAN.png")
             plt.close()
@@ -72,7 +72,7 @@ class Postprocessor :
         plt.xlabel("Epoch number", size=11, labelpad=5)
         plt.ylabel("Accuracy/Loss", size=11, labelpad=5, rotation="vertical")
         plt.title(f"Disciminator performance for "+str(self.dimensionality)+"D cGAN")
-        plt.legend(loc="center right", fontsize=11)
+        plt.legend(fontsize=11)
         if(save):
             plt.savefig(self.dir_out+'/figures/final_product/'+self.var+"_performance_graph_"+str(self.dimensionality)+"D_cGAN.png")
             plt.close()

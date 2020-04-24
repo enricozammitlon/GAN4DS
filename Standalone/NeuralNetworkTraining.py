@@ -36,9 +36,9 @@ class NeuralNetworkTraining:
         self.last=False
         self.file_writer=filewriter
         self.normalisation={}
-        self.normaliseData()
+        #self.normaliseData()
         self.final_produced={}
-        #self.mockNormaliseData()
+        self.mockNormaliseData()
 
     def mockNormaliseData(self):
         for en in range(len(self.training_ds)):
