@@ -1,25 +1,19 @@
-from __future__ import division
-import tensorflow as tf
+#from __future__ import division
+#import tensorflow as tf
 import pickle
 import yaml
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
-import numpy as np
 import matplotlib as mpl
+from collections import defaultdict
 
 def getData(energies, variables_of_interest):
-    allTrees = {}
+    allTrees = []
     for energy in energies:
-        allTrees[energy] = pickle.load(
-            open("in/pickles/outRun_"+energy+".p", "rb"))
-    result = {}
-    for key, value in allTrees.items():
-        filt_value = {k2: v2 for k2,
-                      v2 in value.items() if k2 in variables_of_interest}
-        if(filt_value):
-            result[key] = filt_value
-    return result
+        allTrees.append( pickle.load(
+            open("in/pickles/outRun_"+energy+".p", "rb")))
+    return allTrees
 
 def get_distributed_energies(path):
     with open(path, newline='') as csvfile:
@@ -108,8 +102,7 @@ def normaliseData(training_ds, energies, variables_of_interest):
 currentRun = "run_1_"
 currentSession = "session_1_"
 
-stream = open("./out/"+currentRun+"/sessions/" +
-              currentSession+"/layouts/"+"config.yaml", "r+")
+stream = open("/workspaces/mphys-project/G4_RUNS/serial_architecture/working_3D_cgan_s1_s2_f200/sessions/session_1_/layouts/config.yaml", "r+")
 data = yaml.load(stream, Loader=yaml.FullLoader)
 
 variables_of_interest = data['variables_of_interest']
@@ -177,16 +170,18 @@ for var in variables_of_interest:
 all_stuff={'data':conditions,'normalisation':allNorms}
 pickle.dump( all_stuff, open("./final_result/testing_data.p", "wb" ) )
 '''
-all_stuff = pickle.load(
-            open("./final_result/testing_data.p", "rb"))
-masses=["3"]
+masses=["1-5","2","2-5","3","4"]
 for mass in masses:
+    print("Current log-mass: %s"%(mass.replace('-','.')))
+    all_stuff = pickle.load(
+            open("./final_result/testing_data.p", "rb"))
     conditions=all_stuff['data']
     allNorms=all_stuff['normalisation']
 
     selected_energies=get_distributed_energies('sampling_distributions/Ar_c1dat_m'+mass+'.dat')
+
     #selected_energies = [str(e) for e in selected_energies]
-    mass=mass.replace('-','.')
+    massString=mass.replace('-','.')
     for num,cond in enumerate(conditions):
         conditions[num]=[conditions[num][s]*allNorms[num][s] for s in selected_energies]
 
@@ -195,80 +190,117 @@ for mass in masses:
     # This graph is f200 vs s1
     training_ds = getData([str(e) for e in selected_energies], ['s1','s2','f200like'])
 
-    x = training_ds['15']['s1']
-    plt.hist(x,bins=200,density=True)
-    plt.ylabel(r'$\rho (x)$', size=11, labelpad=5, rotation="vertical")
-    plt.xlabel("S1[NPE]", size=11, labelpad=5)
-    plt.title(f"S1")
-    plt.savefig('./final_result/s1_training.png')
-    plt.close()
-    plt.figure()
-
-    x = np.array(conditions[0][15])
-    plt.hist(x,bins=200,density=True)
-    plt.ylabel(r'$\rho (x)$', size=11, labelpad=5, rotation="vertical")
-    plt.xlabel(r"$S_1$ (NPE])", size=11, labelpad=5)
-    plt.title(f"S1")
-    plt.savefig('./final_result/s1_test.png')
-    plt.close()
-    plt.figure()
-
-    current_energies = list(training_ds.keys())
-    current_variables_of_interest = list(training_ds[current_energies[0]].keys())
     y=[]
     x=[]
-    for i in current_energies:
+    for i in range(len(selected_energies)):
         y.append(training_ds[i]['f200like'])
         x.append(training_ds[i]['s1'])
     y = np.concatenate(y)
     x = np.concatenate(x)
-    h= plt.hist2d(x, y,range= [[0, 600], [0.2, 1]],bins=[100,100],norm=mpl.colors.LogNorm(),cmap=plt.get_cmap("jet"))
-    plt.colorbar(h[3])
+    h1_training,x_edges_1,y_edges_1,im= plt.hist2d(x, y,range= [[0, 600], [0.2, 1]],bins=[100,100],norm=mpl.colors.LogNorm(vmax=1000),cmap=plt.get_cmap("jet"))
+    plt.colorbar(im)
     plt.ylabel(r"$f_{200}$", size=11, labelpad=5, rotation="vertical")
     plt.xlabel("$S_1$(NPE)", size=11, labelpad=5)
-    plt.title(rf"G4DS $log(m)=%s$ $f_{200}$ vs $S_1$"%(mass))
-    plt.savefig('./final_result/'+mass+'_g4_f200_vs_s1.png')
+    plt.title(r"G4DS with log$(m)=%s$ for $f_{200}$ vs $S_1$"%(massString))
+    plt.savefig('./final_result/'+massString+'_g4_f200_vs_s1.png')
     plt.close()
-    plt.figure()
 
+    plt.figure()
     y = np.array(conditions[-1])
     x = np.array(conditions[0])
-    h= plt.hist2d(np.concatenate(x), np.concatenate(y),range= [[0, 600], [0.2, 1]],bins=[100,100],norm=mpl.colors.LogNorm(),cmap=plt.get_cmap("jet"))
-    plt.colorbar(h[3])
+    h1_gan,x_edges_1,y_edges_1,im= plt.hist2d(np.concatenate(x), np.concatenate(y),range= [[0, 600], [0.2, 1]],bins=[100,100],norm=mpl.colors.LogNorm(vmax=1000),cmap=plt.get_cmap("jet"))
+    plt.colorbar(im)
     plt.ylabel(r"$f_{200}$", size=11, labelpad=5, rotation="vertical")
     plt.xlabel(r"$S_1$(NPE)", size=11, labelpad=5)
-    plt.title(rf"GAN $log(m)=%s$ $f_{200}$ vs $S_1$"%(mass))
-    plt.savefig('./final_result/'+mass+'_gan_f200_vs_s1.png')
+    plt.title(r"GAN with log$(m)=%s$ for $f_{200}$ vs $S_1$"%(massString))
+    plt.savefig('./final_result/'+massString+'_gan_f200_vs_s1.png')
     plt.close()
-    plt.figure()
-    # order is [s1,s2,f200]
-    # This graph is f200 vs s1
 
-    current_energies = list(training_ds.keys())
-    current_variables_of_interest = list(training_ds[current_energies[0]].keys())
+    plt.figure()
     y=[]
     x=[]
-    for i in current_energies:
+    for i in range(len(selected_energies)):
         x.append(training_ds[i]['s1'])
         y.append(np.log(np.divide(np.array(training_ds[i]['s2']),np.array(training_ds[i]['s1']))))
 
     y = np.concatenate(y)
     x = np.concatenate(x)
 
-    h=plt.scatter(x, y,s=1)
+    h2_training,x_edges,y_edges,im= plt.hist2d(x, y,range= [[0, 600], [0, 5]],bins=[100,100],norm=mpl.colors.LogNorm(vmax=1000),cmap=plt.get_cmap("jet"))
+    plt.colorbar(im)
     plt.xlabel(r"$S_1$(NPE)", size=11, labelpad=5)
-    plt.ylabel(r"$log(S_2/S_1)$", size=11, labelpad=5)
-    plt.title(rf"G4DS $log(m)=%s$ $log(S_2/S_1)$ vs $S_1$"%(mass))
-    plt.savefig('./final_result/'+mass+'_g4_s1_over_s2_vs_s1.png')
+    plt.ylabel(r"log$(S_2/S_1)$", size=11, labelpad=5)
+    plt.title(r"G4DS with log$(m)=%s$ for log$(S_2/S_1)$ vs $S_1$"%(massString))
+    plt.savefig('./final_result/'+massString+'_g4_s1_over_s2_vs_s1.png')
     plt.close()
 
     x = np.array(conditions[0])
     y = np.log(np.divide(np.array(conditions[1]),np.array(conditions[0])))
     y = np.concatenate(y)
     x = np.concatenate(x)
-    h=plt.scatter(x, y,s=1)
+
+    h2_gan,x_edges_2,y_edges_2,im = plt.hist2d(x, y,range= [[0, 600], [0, 5]],bins=[100,100],norm=mpl.colors.LogNorm(vmax=1000),cmap=plt.get_cmap("jet"))
+    plt.colorbar(im)
     plt.xlabel(r"$S_1$(NPE)", size=11, labelpad=5)
-    plt.ylabel(r"$log(S_2/S_1)$", size=11, labelpad=5)
-    plt.title(rf"GAN $log(m)=%s$ $log(S_2/S_1)$ vs $S_1$"%(mass))
-    plt.savefig('./final_result/'+mass+'_gan_s1_over_s2_vs_s1.png')
+    plt.ylabel(r"log$(S_2/S_1)$", size=11, labelpad=5)
+    plt.title(r"GAN with log$(m)=%s$ for log$(S_2/S_1)$ vs $S_1$"%(massString))
+    plt.savefig('./final_result/'+massString+'_gan_s1_over_s2_vs_s1.png')
     plt.close()
+
+    diff = (h2_gan - h2_training)
+    custom_cmap=plt.get_cmap("seismic")
+    #custom_cmap.set_bad('white')
+    #diff = np.ma.masked_equal(diff, 0)
+    h2_diff= plt.pcolormesh(x_edges_2, y_edges_2,diff.T,norm=mpl.colors.Normalize(vmin=-1000,vmax=1000),cmap=custom_cmap)
+    cbar= plt.colorbar(h2_diff)
+    #cbar.ax.set_yticklabels([r'$-10^3$',r'$-10^2$',r'$10^2$',r'$10^3$'])
+    plt.xlabel(r"Difference in $S_1$(NPE)", size=11, labelpad=5)
+    plt.ylabel(r"Difference in log$(S_2/S_1)$", size=11, labelpad=5)
+    plt.title(r"GAN4DS-G4DS with log$(m)=%s$ for log$(S_2/S_1)$ vs $S_1$"%(massString))
+    plt.savefig('./final_result/'+massString+'_difference_s1_over_s2_vs_s1.png')
+    plt.close()
+    '''
+    ratio = np.divide(h2_gan,h2_training , out=np.zeros_like(h2_gan), where=h2_training!=0)
+    #ratio = np.ma.masked_equal(ratio, 1)
+    #linthresh=0.03, linscale=0.03 ,vmin=0, vmax=1000, base=10
+    h2_ratio= plt.pcolormesh(x_edges_2, y_edges_2,ratio.T,norm=mpl.colors.LogNorm(),cmap=plt.get_cmap("jet"))
+    #ticks=[1000,2, 1, 10e-1]
+    cbar= plt.colorbar(h2_ratio)
+    #cbar.ax.set_yticklabels(['1000','2','1','10e-1'])
+    plt.xlabel(r"Ratio in $S_1$(NPE)", size=11, labelpad=5)
+    plt.ylabel(r"Ratio in log$(S_2/S_1)$", size=11, labelpad=5)
+    plt.title(rf"GAN4DS/G4 with log$(m)=%s$ for log$(S_2/S_1)$ vs $S_1$"%(massString))
+    plt.savefig('./final_result/'+massString+'_ratio_s1_over_s2_vs_s1.png')
+    plt.close()
+    '''
+    diff = (h1_gan - h1_training)
+    custom_cmap=plt.get_cmap("seismic")
+    #custom_cmap.set_bad('white')
+    #diff = np.ma.masked_equal(diff, 0)
+    h1_diff= plt.pcolormesh(x_edges_1, y_edges_1,diff.T,norm=mpl.colors.Normalize(vmin=-1000,vmax=1000),cmap=custom_cmap)
+    cbar= plt.colorbar(h1_diff)
+    #cbar.ax.set_yticklabels([r'$-10^3$',r'$-10^2$',r'$10^2$',r'$10^3$'])
+    plt.ylabel(r"Difference in $f_{200}$", size=11, labelpad=5, rotation="vertical")
+    plt.xlabel(r"Difference in $S_1$(NPE)", size=11, labelpad=5)
+    plt.title(r"GAN4DS-G4 with log$(m)=%s$ for $f_{200}$ vs $S_1$"%(massString))
+    plt.savefig('./final_result/'+massString+'_difference_f200_vs_s1.png')
+    plt.close()
+    plt.figure()
+
+    '''
+    custom_cmap=plt.get_cmap("seismic")
+    custom_cmap.set_bad('white')
+    ratio = np.divide(h1_gan,h1_training , out=np.zeros_like(h1_gan), where=h1_training!=0)
+    ratio = np.ma.masked_equal(ratio, 0)
+    #linthresh=0.03, linscale=0.03 ,vmin=0, vmax=1000, base=10
+    h1_ratio= plt.pcolormesh(x_edges_1, y_edges_1,ratio.T,norm=mpl.colors.LogNorm(),cmap=plt.get_cmap("seismic"))
+    #ticks=[1000,2, 1, 10e-1]
+    cbar= plt.colorbar(h2_ratio)
+    #cbar.ax.set_yticklabels(['1000','2','1','10e-1'])
+    plt.ylabel(r"$f_{200}$", size=11, labelpad=5, rotation="vertical")
+    plt.xlabel(r"$S_1$(NPE)", size=11, labelpad=5)
+    plt.title(rf"GAN4DS/G4 with log$(m)=%s$ for $f_{200}$ vs $S_1$"%(massString))
+    plt.savefig('./final_result/'+massString+'_ratio_f200_vs_s1.png')
+    plt.close()
+    plt.figure()
+    '''
