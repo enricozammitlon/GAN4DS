@@ -5,3 +5,4 @@ __pycache__
 *.root
 gan4ds.err
 gan4ds.out
+!*.gitignore
