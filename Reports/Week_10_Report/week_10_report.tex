@@ -1,0 +1,80 @@
+\documentclass[11pt]{article} %This sets the font size and the document class of your report. In this case we use 'article' as that is ideal for shorter reports.
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+% LaTeX can be enhanced by the use of packages. These packages can do many things, a few of the most common and useful are used here. They are declared before the document proper, in what is known as the 'preamble'. Packages need to be installed when a .tex file compiles into a .pdf, but should do so automatically.
+
+\usepackage[top=2.54cm, bottom=2.54cm, left=2.75cm, right=2.75cm]{geometry} %This sets the margins of the report.
+
+\usepackage{graphicx} % A package allowing insertion of images into the text.
+
+% Choose your citations style by commenting out one of the following groups. If you decide to change style, you should also delete the .bbl file that you will find in the same folder as your .tex and .pdf files.
+
+% IEEE style citation:
+\usepackage{cite}         % A package that creates references in the IEEE style.
+\newcommand{\citet}{\cite} % Use with cite only, so that it understands the natbib-specific \citet command
+\bibliographystyle{ieeetr} % IEEE referencing (use in conjunction with the cite package)
+
+%% Author-date style citation:
+%\usepackage[round]{natbib} % A package that creates references in the author-date style, with round brackets
+%\renewcommand{\cite}{\citep} % For use with natbib only: comment out for the cite package.
+%\bibliographystyle{plainnat} % Author-date referencing (use in conjunction with the natbib package)
+\usepackage{color} % Allows the colour of the font to be changed by using the '\color' command: This is just to support the blue comments in this template...use standard (black) text in your report.
+
+\linespread{1} % Sets the spacing between lines of text.
+\setlength{\parindent}{0cm}  % Suppresses indentation of text at the start of a paragraph
+\pagenumbering{arabic} % sets the style of page numbering for the report
+
+
+\begin{document} % This begins the document proper and ends the pre-amble
+
+% The last } finishes the chunk of text opening with {\color{blue}..., so all of the above appears as blue text. A common LaTeX error is to forget to close such a chunk of text, so if the formatting goes wrong look for a missing }.
+
+% To get rid of the blue text, select and delete everything from '{\color' to '}', inclusive, leaving \ begin{titlepage} as the first command  after \begin{document}
+
+\begin{center} % Starts the beginning of an environment where all text is centered.
+
+{\Huge Week 10 Report}\\[0.5cm] % [0.5cm] sets the distance between this line and the next.
+\textit{Enrico Zammit Lonardelli and Krishan Jethwa}\\[0.3cm] % The '\\' starts a new paragraph, and will only work after a paragraph has started, unless we use '~'.
+
+% If this was an individual report then remove the "For an individual report" section and replace "Partner name".
+
+\end{center}
+{\Large \textbf{Introduction}}
+
+This report is a summary of the work that we have done for the first ten weeks of our master's project. We assume familiarity with G4DS20k software package but require no technical knowledge of machine learning techniques. The aim of this report is to show a basic comparison between simulations out of Geant4 packages and output of a Generative Adverserial Network (GAN). Although this particular run configuration and plots are worth investigating, it is meant to show the potential of GANs in detector analysis and simulation and to show what is and is not feasable by this framework.
+% New paragraphs can either be initiated by a double vertical space i.e. tapping the enter button twice, which causes the paragraph below to be indented, or by a '\\', which does not cause the next paragraph to indent. In a long section of mainly writing, indentations on paragraphs can help break up the text into different sections. To avoid indentations in your report when they are not needed, use the  command before the line.
+
+\section{G4DS20k Configuration}
+% LaTeX automatically numbers sections and subsections when the command '\section{}' is used. This is useful in very long reports. It does not need a '\\' after it as LaTeX recognises it as a section header.
+\label{intro}
+% A label allows symbolic cross-referencing using the \ref{} command.
+% \label{} can appear in the text (when they refer to the preceding (sub)section title), equations, tables, or figures.
+% In this case, if you write "Section \ref{intro}" this will be rendered as "Section 1".
+
+We are using the branch called \textit{sol\_niamh\_andrzej\_g410.1.2} as our starting point. For the exact configuration details please refer to the appendix.
+To summarize, we have used the full detector configuration (current to the time of writing this report) with an Ar40 recoil at random starting positions in the direction (0,0,-1).
+This was run for 100,000 events and variables of significance S1 and S2 obtained.
+
+\section{Theory}
+ For plane polarised light travelling in the $z$ direction, the electric field vector is given by
+
+
+\begin{subsection}{Attenuation Constants}
+As discussed before, the non-perfect transmission of light through the dichroic polarisers means some of the light intensity will absorbed by the light as it passes through.
+\end{subsection}
+
+\section{Results}
+%\begin{figure}[h]
+%\centering
+%\includegraphics[scale=0.35]{Graph1.jpg}
+%\caption{Graph of voltage against analyser angle for the first photodiode.}
+%\label{fig:ampone}
+%\end{figure}
+
+
+
+\bibliography{report_template_library} % Specifies the bibliography file where our references are stored. If the library file and document are not in the same folder then the file path must also be included.
+
+
+\end{document}
