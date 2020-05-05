@@ -1,6 +1,7 @@
 \documentclass[11pt]{article} %This sets the font size and the document class of your report. In this case we use 'article' as that is ideal for shorter reports.
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage{subcaption}
 % LaTeX can be enhanced by the use of packages. These packages can do many things, a few of the most common and useful are used here. They are declared before the document proper, in what is known as the 'preamble'. Packages need to be installed when a .tex file compiles into a .pdf, but should do so automatically.
 \usepackage[skip=0.5ex]{subcaption}
 \usepackage[top=2.54cm, bottom=2.54cm, left=2.75cm, right=2.75cm]{geometry} %This sets the margins of the report.
@@ -13,7 +14,8 @@
 % IEEE style citation:
 \usepackage[style=ieee]{biblatex}
 \addbibresource{sem_2_report.bib}
-
+\DeclareMathOperator{\E}{\mathbb{E}}
+\usepackage{enumerate}
 %% Author-date style citation:
 %\usepackage[round]{natbib} % A package that creates references in the author-date style, with round brackets
 %\renewcommand{\cite}{\citep} % For use with natbib only: comment out for the cite package.
@@ -254,36 +256,15 @@ What this means is that there might be difficulty in training a neural network t
 \par The neural networks described in the next section will therefore be trained on these types of distributions and finally we will want to reproduce
 plots such as Figure \ref{fig:psd} to check that the connection between the three variables has been understood to an extent.
 To produce a plot for $f_{200}$ vs $S_1$ first a mass for the WIMP is chosen, in this case we take log$(m)=1.5$ which corresponds to a 31.5 GeV/$c^2$ mass.
-From theory the corresponding recoil energy spectrum is chosen, shown by Figure \ref{fig:recoil}.
-After sampling 1000 energies these are used to sample from 1000 runs of 1000 $^{40}\mathrm{\text{Ar}}$ recoils in G4DS to then produce Figure \ref{fig:g4ds_results}.
-These figures (and similarly for log$(m)=$2,2.5,3,4) will be used to compare all our results with the deep learning technique.
+From theory the corresponding recoil energy spectrum is chosen, shown by Figure \ref{fig:recoil} for log$(m)=$1.5.
+After sampling 1000 energies these are used to select from runs of 1000 $^{40}\mathrm{\text{Ar}}$ recoils in G4DS to then produce the Figures seen later in Section 3.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{images/Ar_c1dat_m1-5.png}
-\caption{A plot of the recoil energy spectrum from theory vs the sampled N=1000 energies spectrum used to work for this mass of WIMP}
+\caption{A plot of the recoil energy spectrum from theory vs the sampled N=1000 energies spectrum used to work for mass of WIMP log$(m)=1.5$.}
 \label{fig:recoil}
 \end{figure}
 
-\begin{figure}[H]
-\begin{minipage}{.5\textwidth}
-  \begin{subfigure}{.9\textwidth}
-      \includegraphics[scale=0.6]{./images/g4_f200_vs_s1.png}
-      \subcaption{G4DS generated plotted for $f_{200}$ vs $S_1$ for discrimination, showing events in the signal region.
-      As compared with Figure \ref{fig:psd} there is a band of mean value close to $f_{200}=0.7$.}
-  \end{subfigure}
-\end{minipage}
-\begin{minipage}{.5\textwidth}
-  \centering
-  \begin{subfigure}{.9\textwidth}
-      \includegraphics[scale=0.6]{./images/g4_s1_over_s2_vs_s1.png}
-      \subcaption{G4DS generated plotted for $S_1$ vs $S_2$ which is another discriminant plot used between signal and background.
-      ER would have a smiliar shape but lie above this band of NR with some mixing.}
-  \end{subfigure}
-\end{minipage}
-\caption{Plots commonly used for discriminating between signal and background.
-Produced from G4DS data, these plots will be used at the end of our machine learning to compare how well the three variables trained on are understood and their joint probability distributions.}
-\label{fig:g4ds_results}
-\end{figure}
 \subsection{Deep learning as an alternative}
 As discussed before, the results obtained with G4DS are well understood and accepted as good simulations (backed up by experiments such as SCENE, DS50).
 However, with great detail come large amounts of time waiting for the simulations to complete.
@@ -294,42 +275,296 @@ It would also be improbable for an institution or a department with a fixed budg
 not a sustainable solution.
 \\
 \par This is where neural networks appear as a possible solution to this problem.
-This will not be a complete overview of machine learning techniques, rather for that please refer to INSERT HERE.
-First of all, a neural netowkr is a set of connected nodes in different layers.
+This will not be an introduction to machine learning techniques, rather for that please refer to INSERT HERE.
+A neural network is a set of connected nodes in different layers.
 Each layer contains many nodes connected to other nodes from successive and previous layers.
-Each of these nodes represent intermediary weights to certain functions of output.
+Each of these nodes carry intermediary weights to certain functions of output.
 In a forward run, the input layers (containing the data to be trained) are connected to
 intermediary layers whom carry out some transformation or apply a so called 'activation function' to give
 the intermediary weights some values.
 This is repeated until the final layer is reached which will usually have an activation function which is dependent on the type of problem at hand.
 For example, a classification problem will have weights representing each category which will be largest for the category the algorithm classifies the input as and lower or 0 for the others.
 These final weights are then compared to what they should be from the known labelled training data and a quantity to measure 'goodness' of the algorithm is set.
-The function doing this is called the loss function.
-Acting on this number will be an optimzer which then changes the intermediary weights accoridingly so that ideally on the next run
+The function doing this measure is called the loss function.
+Acting on this number will be an optimzer which then changes the intermediary weights accordingly so that ideally on the next run
 the new weights and activation functions will guide the algorithm towards a better final weights which will minimze loss and maximise accuracy.
 \\
-\par This is actually only a subset of machine learning known as supervidsed learning.
-The other kind, unsupervised learning, is what we carry out in the algorithms detailed in this report where we essentially want dimensionality reduction.
+\par This is actually only one type of machine learning known as supervised learning.
+The other kind, unsupervised learning, is what we carry out in the algorithms detailed in this report where we essentially implement dimensionality reduction.
 Particularly, we make use of a rather new method of machine learning known as Generative Adverserial Networks.
 In our case we have two neural networks, one known as the classifier and the other as the generator.
 The aim of the generator is to reproduce training data as close as possible while the job of the classifier is to
 spot at each iteration of training (known as an epoch) which of the two inputs it is being presented by, real or generated.
-Their loss functions are connected together by the equation
+Their loss functions, for a fixed generator G and the optimal discriminator $D^*_G(\bar x)$ is given by minimizing the function
+\begin{equation}
+  C(G)=\E_{x\sim p_{data}}[\log (D^*_G(\bar x)]+\E_{x\sim p_{g}}[\log(1-D^*_G(\bar x)]
+  \label{eq:minmax}
+\end{equation}
+where the optimal discriminator is described by
+\begin{equation}
+  D^*_G(\bar x)= \frac{p_{data}(\bar x)}{p_{data}(\bar x) + p_{g}(\bar x)}.
+  \label{eq:optimal_disc}
+\end{equation}
 \\
-For the ideal case where the generartor is perfect the accuracy of the discriminator results in around 0.5 as it would have no real clue other than a 50-50 chance to tell the difference.
-
-
-\section{Methods and Results}
-\subsection{Problems in previous work}
-
+For the ideal case where the generator is perfect the accuracy of the discriminator results in around 0.5 as it would have no real clue other than a 50-50\% chance to tell the difference.
+\section{Methods}
+\subsection{Improvements over previous work}
+In the first semester, a qualitative approach was taken to this problem of trying to reproduce G4DS dat through a GAN.
+Moreover, we required a cGAN, or conditional GAN, which would accept as a condition the nuclear recoil energy E and produce the corresponding $S_1$, $S_2$, $f_200$.
+The results of that report showed promising reproductions of the real data but there were two main problems with that approach:
+\begin{enumerate}[i)]
+  \item There was barely any quantitave analysis of the reproducability of the GAN with respect to training data.
+  This was done mainly by visually looking at any two same energy plots for a particular variable since the main aim was to check that we had an algorithm that worked to some extent.
+  \item As we trained the GAN to learn $P(S_1|E)$ and then $P(S_1 \cap S_2|E)$ and so on the network needed was exponentially larger and more complicated.
+  It was not only a matter of adding more layers or nodes but required for each variable a substantial rethinking of the networks (generator and discriminator) as a whole every time.
+  \item The 3D, 1 conditional GAN was not able to learn the 3 variables at once and we had to abandon this path quickly since it did not produce any returns on effort put in.
+\end{enumerate}
 \subsection{Novel techniques}
+\subsubsection{Wasserstein GANs}
+As a result of this we expanded our search for a different architecture of GANs.
+We found wGANs, or Wasserstein GANs, to be the next architecture we would try in this last semester.
+The main feature of this GAN is that it uses a different loss function, or way of quantifying how bad the generator output is from the real data.
+The problem with this is that although initially we thought this difference was only about modifying the loss function and some minor tweaks in the code,
+initial results quickly highlighted this was fundamentally a different architecture we were dealing with.
+This would have meant spending close to the same time as the first semester, trying to get essentially the same point we already had got.
+This architecture promised better convergence in less epochs and is proven to be much better in terms of performance than the minmax approach taken by the
+underlying loss function of the traditional GAN but this was not the aim of what were doing.
+We thus decided to set focus our efforts on other architectures.
+Finally, here we are not saying wGANs are not worth implementing, rather from what we observed during
+proof of concept training they are very efficient but quickly end up in failure modes if not configured well.
+So we do suggest this architecture be studied in the future, perhaps in the next iteration of this project since it could potentially
+save many epochs worth of work and achieve evene better convergence.
+\subsubsection{ARGANs}
+AutoRegressive GANs have been first called so in 2018 but the underlying theory has been used in the context of machine learning for decades now.
+Although mostly used in the ambit of image recognition the method still applies for our problem.
+In reality, the ARGAN proposed in 2018 actually made use of modeling data in the latent (feature) space rather than data space like the older
+employers of this method have.
+The closest to what we have done was done in 2011 when a GAN was used by training it in an image generation context.
+Each pixel was trained individually with the condition of all its preceding pixels learnt.
+Similarly the probability we are trying to teach our generator in this method is given by
+\begin{equation}
+  p(\bar x)= \prod_{i=1}^np(x_i|x_0,...,x_{i-1})
+  \label{eq:prob_dist}
+\end{equation}
+where in our case $i$ runs from 1 to 3 for $S_1$, $S_2$, $f_200$ and $i=0$ is the recoil energy E.
+More explicitly, $P(S_1|E)$ will be taught for s epochs (usually 10,000 in this report) and then the best output of that generator will be
+passed to $P(S_2|S_1,E)$ to be trained for a further 10,000 epochs and again to obtain $P(f_{200}|S_2,S_1,E)$.
+The massive advantage of this is that essentially we are training 1DcGANs (where the dimension is the variable being taught) and
+by the end of the process we will have trained the three variables with their joint porbabilities, all from a single energy input.
+Moreover, the complexity of this architecture is comparable to the 1D vanilla cGAN rather than the 3D cGAN.
+Lastly, in my personal opinion as an advocate for scalability and future-proofing, we are making sure that if the collaboration's needs
+are ever changed so as to require the need to train a further variable, this can be easily done.
+Unless this variable is wildly different than the three already taught chances are that a very similar neural network can be used.
+\subsubsection{New Metric: Moments}
+\begin{figure}[H]
+\centering
+\begin{minipage}{\textwidth}
+  \begin{subfigure}{.5\textwidth}
+      \includegraphics[scale=0.5]{./images/moment_1_s1.png}
+      \subcaption{G4DS.}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+      \includegraphics[scale=0.5]{./images/moment_2_s1.png}
+      \subcaption{G4DS.}
+  \end{subfigure}
+\end{minipage}
+\begin{minipage}{\textwidth}
+  \begin{subfigure}{.5\textwidth}
+      \includegraphics[scale=0.5]{./images/moment_1_s2.png}
+      \subcaption{G4DS.}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+      \includegraphics[scale=0.5]{./images/moment_2_s2.png}
+      \subcaption{G4DS .}
+  \end{subfigure}
+\end{minipage}
+\begin{minipage}{\textwidth}
+  \begin{subfigure}{.5\textwidth}
+      \includegraphics[scale=0.5]{./images/moment_1_f200like.png}
+      \subcaption{G4DS.}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+      \includegraphics[scale=0.5]{./images/moment_2_f200like.png}
+      \subcaption{G4DS.}
+  \end{subfigure}
+\end{minipage}
+\caption{Use of moments during training drasticlly captures the actual performance of the GAN rather than accuracy-loss.}
+\label{fig:moments}
+\end{figure}
+\subsubsection{Work Pipeline}
+Before presenting results, I thought it might be worthwhile briefly mentioning changes to our
+coding style and the way we completely redfined our work pipeline.
+Last semester we found working on an online, free platform provided by Google called Colab helped us work together thus sharing the same results
+and make use of the Python Jupyter notebooks with NVIDIA T4 GPUs which have a 16GB memory needed for the large dataset of training we had with 3 variable, 1000 events per energy with 230 energies.
+We found however that we easily ended up with tens of notebooks, each with a different architecture and needing to manually save outputs.
+Consitency between different notebooks was lacking at best and the biggest drawback was that the session would timeout after a while so the network could not
+be let to train for long periods of time reliably.
+\\
+\par We therefore took the opportunity to convert all of the code to a single Python project to be run on the University of Manchester Physics Department GPU cluster.
+The package we produced aims to really focus on being able to be used i nthe future by people that might not be aware of the inner workings of machine learning
+and instead changes the focus on what the researcher wants to train and what they would like to see it output.
+The program takes in the variables and the training dataset (after self-extracting from ROOT files of $\approx$ 1GB per energy to $\approx$ 20kB )
+and a layout specified in a markup language independent from the Python code.
+The program then automatically splits up the data in as many batches as needed to serve memory requirements, creates the ARGAN structure, opens a monitorable
+Tensorboard session and saves all plots and data logs in a single, consitent format.
+Tensorboard is a package provided by Google, the creators of Tensorflow, which allows monitoring machine learning progress to the level
+where one can monitor the weights of each individual layer to see how they change with epochs.
+We actually made use of this to remove any layers or nodes which were essentially useless or redundant or in certain cases were damagin performance and convergability.
+We made this codebase in the hope it could serve as a baseline for future teams potnetially working on continuing our work and encourage to expand its capabilities.
+\section{Results}
+\subsection{Individual Variables}
+All results unless specified were obtained by using an ARGAN with 10,000 epochs per variable.
+The dataset is comprised of 1000 $^{40}\mathrm{\text{Ar}}$ recoils per nuclear recoil energy in the range [5,235] keV in steps of 1 keV.
+Figure \ref{fig:ind_results} shows (left) the results of 3 samples (min,middle and max in recoil energy domain) of training dataset overlayed with the best GAN output per variable and
+(right) the differences for each two equal energy, equal variable counts.
+\begin{figure}[H]
+\centering
+\begin{minipage}{\textwidth}
+  \begin{subfigure}{.5\textwidth}
+      \includegraphics[scale=0.5]{./images/best_s1.png}
+      \subcaption{G4DS.}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+      \includegraphics[scale=0.5]{./images/difference_best_s1.png}
+      \subcaption{G4DS.}
+  \end{subfigure}
+\end{minipage}
+\begin{minipage}{\textwidth}
+  \begin{subfigure}{.5\textwidth}
+      \includegraphics[scale=0.5]{./images/best_s2.png}
+      \subcaption{G4DS.}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+      \includegraphics[scale=0.5]{./images/difference_best_s2.png}
+      \subcaption{G4DS .}
+  \end{subfigure}
+\end{minipage}
+\begin{minipage}{\textwidth}
+  \begin{subfigure}{.5\textwidth}
+      \includegraphics[scale=0.5]{./images/best_f200like.png}
+      \subcaption{G4DS.}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+      \includegraphics[scale=0.5]{./images/difference_best_f200like.png}
+      \subcaption{G4DS.}
+  \end{subfigure}
+\end{minipage}
+\caption{Individual variables learnt successivly with each variable adding itself as an input condition
+to the next variable being trained. Direct comparisons between generated and trained data to the left, differences per bin on the right.}
+\label{fig:ind_results}
+\end{figure}
+\subsection{Variable Correlations}
+\begin{figure}[H]
+\centering
+\begin{minipage}{\textwidth}
+  \begin{subfigure}{.5\textwidth}
+      \centering\captionsetup{width=.8\linewidth}%
+      \includegraphics[scale=0.5]{./images/1.5/g4_f200_vs_s1.png}
+      \caption{G4DS generated plot for $f_{200}$ vs $S_1$. As in Figure \ref{fig:psd} there is a band of mean value close to $f_{200}=0.7$.}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+      \centering\captionsetup{width=.8\linewidth}%
+      \includegraphics[scale=0.5]{./images/1.5/g4_s1_over_s2_vs_s1.png}
+      \caption{G4DS generated plot for log($S_2$/$S_1$) vs $S_1$ as another discriminant between signal and background.}
+  \end{subfigure}
+\end{minipage}
+\begin{minipage}{\textwidth}
+  \begin{subfigure}{.5\textwidth}
+      \centering\captionsetup{width=.8\linewidth}%
+      \includegraphics[scale=0.5]{./images/1.5/gan_f200_vs_s1.png}
+      \caption{Reproduced plot by GAN4DS through learning individual variables}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+      \centering\captionsetup{width=.8\linewidth}%
+      \includegraphics[scale=0.5]{./images/1.5/gan_s1_over_s2_vs_s1.png}
+      \caption{Reproduced plot by GAN4DS through learning individual variables}
+  \end{subfigure}
+\end{minipage}
+\begin{minipage}{\textwidth}
+  \begin{subfigure}{.5\textwidth}
+      \centering\captionsetup{width=.8\linewidth}%
+      \includegraphics[scale=0.5]{./images/1.5/difference_f200_vs_s1.png}
+      \caption{Difference between per bin GAN4DS and G4DS}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+      \centering\captionsetup{width=.8\linewidth}%
+      \includegraphics[scale=0.5]{./images/1.5/difference_s1_over_s2_vs_s1.png}
+      \caption{Difference per bin between GAN4DS and G4DS}
+  \end{subfigure}
+\end{minipage}
+\caption{Results showing correlation learnt between the different variables by GAN4DS for log$(m)=1.5$.}
+\label{fig:corr_results_1_5}
+\end{figure}
 
-\subsection{Results}
-\subsubsection{Variable Learning}
+\begin{figure}[H]
+\centering
+\begin{minipage}{\textwidth}
+  \begin{subfigure}{.5\textwidth}
+      \centering\captionsetup{width=.8\linewidth}%
+      \includegraphics[scale=0.5]{./images/4/g4_f200_vs_s1.png}
+      \caption{G4DS generated plot for $f_{200}$ vs $S_1$.}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+      \centering\captionsetup{width=.8\linewidth}%
+      \includegraphics[scale=0.5]{./images/4/g4_s1_over_s2_vs_s1.png}
+      \caption{G4DS generated plot for log($S_2$/$S_1$) vs $S_1$.}
+  \end{subfigure}
+\end{minipage}
+\begin{minipage}{\textwidth}
+  \begin{subfigure}{.5\textwidth}
+      \centering\captionsetup{width=.8\linewidth}%
+      \includegraphics[scale=0.5]{./images/4/gan_f200_vs_s1.png}
+      \caption{GAN4DS generated plot for $f_{200}$ vs $S_1$.}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+      \centering\captionsetup{width=.8\linewidth}%
+      \includegraphics[scale=0.5]{./images/4/gan_s1_over_s2_vs_s1.png}
+      \caption{GAN4DS generated plot for log($S_2$/$S_1$) vs $S_1$}
+  \end{subfigure}
+\end{minipage}
+\begin{minipage}{\textwidth}
+  \begin{subfigure}{.5\textwidth}
+      \centering\captionsetup{width=.8\linewidth}%
+      \includegraphics[scale=0.5]{./images/4/difference_f200_vs_s1.png}
+      \caption{Difference per bin between GAN4DS $-$ G4DS generated data.}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+      \centering\captionsetup{width=.8\linewidth}%
+      \includegraphics[scale=0.5]{./images/4/difference_s1_over_s2_vs_s1.png}
+      \caption{Difference per bin between GAN4DS $-$ G4DS generated data.}
+  \end{subfigure}
+\end{minipage}
+\caption{Results showing correlation learnt between the different variables by GAN4DS for log$(m)=4$.}
+\label{fig:corr_results_4}
+\end{figure}
 
-\subsubsection{Analysis and Final Product}
-
-
+\subsection{Accuracy Analysis}
+\begin{figure}[H]
+\centering
+\begin{minipage}{\textwidth}
+  \begin{subfigure}{.5\textwidth}
+      \centering\captionsetup{width=.8\linewidth}%
+      \includegraphics[scale=0.5]{./images/wasserstein_distance_s1.png}
+      \caption{G4DS.}
+  \end{subfigure}
+  \begin{subfigure}{.5\textwidth}
+      \centering\captionsetup{width=.8\linewidth}%
+      \includegraphics[scale=0.5]{./images/wasserstein_distance_s2.png}
+      \caption{G4DS.}
+  \end{subfigure}
+\end{minipage}
+\begin{minipage}{\textwidth}
+  \centering
+  \begin{subfigure}{.5\textwidth}
+      \centering\captionsetup{width=.8\linewidth}%
+      \includegraphics[scale=0.5]{./images/wasserstein_distance_f200like.png}
+      \caption{G4DS.}
+  \end{subfigure}
+\end{minipage}
+\caption{Individual variables learnt successivly with each variable adding itself as an input condition
+to the next variable being trained. Direct comparisons between generated and trained data to the left, differences per bin on the right.}
+\label{fig:wass_distance}
+\end{figure}
 \section{Final Remarks}
 
 \newpage

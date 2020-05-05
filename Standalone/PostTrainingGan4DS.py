@@ -89,6 +89,13 @@ def analyse_differences(training_ds,conditions,energies_inputted,variables_of_in
     for num,var in enumerate(variables_of_interest):
         all_p_values=[]
         distance=[[],[]]
+        varString=''
+        if(var=='s1'):
+            varString=r'$S_1$'
+        elif(var=='s2'):
+            varString=r'$S_2$'
+        else:
+            varString=r'$f_{200}$'
         for i in range(len(energies_inputted)):
             #print('Observed whitney (U,P): %.6f %.6f' % mannwhitneyu(x, y))
             x=np.array(conditions[num][i])
@@ -101,7 +108,7 @@ def analyse_differences(training_ds,conditions,energies_inputted,variables_of_in
             test_chi = lambda x,y : chisquare(np.histogram(x,bins=50)[0],np.histogram(y,bins=50)[0])[0]
             p_value = permutation_test(x, y,
                                 method='approximate',
-                                num_rounds=100,
+                                num_rounds=1000,
                                 func= test_gmean,
                                 seed=0)
             x=x/max(y)
@@ -130,23 +137,23 @@ def analyse_differences(training_ds,conditions,energies_inputted,variables_of_in
         ax2.legend(loc='center left')
         ax.set_xlabel("Nuclear Recoil Energy", size=11, labelpad=5)
         ax.set_ylabel("P value", size=11, labelpad=5)
-        ax.set_title("Permutation test for \n"+var+" on two-tailed geometric mean differences.")
+        ax.set_title("Permutation test for \n"+varString+" on two-tailed geometric mean differences.")
         plt.savefig('./final_result/analysis/pval_gmean_test_'+var+'.png')
         plt.close()
 
         x=[el[1] for el in distance[0]]
         y=[el[0] for el in distance[0]]
-        plt.scatter(x,y,marker='x',s=1.5,color='blue',label='all p values',alpha=0.5)
+        plt.scatter(x,y,marker='x',s=1.5,color='blue',label='All p values (100%)',alpha=0.5)
         x3=[distance[0][el][1] for el in range(len(all_p_values)) if(all_p_values[el][0]>0.1)]
         y3=[distance[0][el][0] for el in range(len(all_p_values)) if(all_p_values[el][0]>0.1)]
-        plt.scatter(x3,y3,marker='x',s=1.5,color='green',label='p>0.1')
+        plt.scatter(x3,y3,marker='x',s=1.5,color='green',label="p>0.1 (%.2f%%)"%(100*(len(y3)/len(y))))
         x2=[distance[0][el][1] for el in range(len(all_p_values)) if(all_p_values[el][0]>0.5)]
         y2=[distance[0][el][0] for el in range(len(all_p_values)) if(all_p_values[el][0]>0.5)]
-        plt.scatter(x2,y2,marker='x',s=1.5,color='red',label='p>0.5')
-        plt.xlabel("Nuclear Recoil Energy", size=11, labelpad=5)
+        plt.scatter(x2,y2,marker='x',s=1.5,color='red',label="p>0.5 (%.2f%%)"%(100*(len(y2)/len(y))))
+        plt.xlabel("Nuclear Recoil Energy (keV)", size=11, labelpad=5)
         plt.ylabel("Wasserstein Distance", size=11, labelpad=5)
         plt.legend()
-        plt.title("Wasserstein distance for \n"+var+" for varying recoil energies")
+        plt.title("Wasserstein distance for \n"+varString+" for varying recoil energies")
         plt.savefig('./final_result/analysis/wasserstein_distance_'+var+'.png')
         plt.close()
 
@@ -215,7 +222,7 @@ def draw_physical_graphs(gan_data,gan_norms,mass):
     plt.colorbar(im)
     plt.ylabel(r"$f_{200}$", size=11, labelpad=5, rotation="vertical")
     plt.xlabel(r"$S_1$(NPE)", size=11, labelpad=5)
-    plt.title(r"GAN with log$(m)=%s$ for $f_{200}$ vs $S_1$"%(massString))
+    plt.title(r"GAN4DS with log$(m)=%s$ for $f_{200}$ vs $S_1$"%(massString))
     plt.savefig('./final_result/discrimination_plots/'+massString+'/gan_f200_vs_s1.png')
     plt.close()
 
@@ -246,7 +253,7 @@ def draw_physical_graphs(gan_data,gan_norms,mass):
     plt.colorbar(im)
     plt.xlabel(r"$S_1$(NPE)", size=11, labelpad=5)
     plt.ylabel(r"log$(S_2/S_1)$", size=11, labelpad=5)
-    plt.title(r"GAN with log$(m)=%s$ for log$(S_2/S_1)$ vs $S_1$"%(massString))
+    plt.title(r"GAN4DS with log$(m)=%s$ for log$(S_2/S_1)$ vs $S_1$"%(massString))
     plt.savefig('./final_result/discrimination_plots/'+massString+'/gan_s1_over_s2_vs_s1.png')
     plt.close()
 
@@ -254,9 +261,10 @@ def draw_physical_graphs(gan_data,gan_norms,mass):
     custom_cmap=plt.get_cmap("seismic")
     h2_diff= plt.pcolormesh(x_edges_2, y_edges_2,diff.T,norm=mpl.colors.Normalize(vmin=-1000,vmax=1000),cmap=custom_cmap)
     cbar= plt.colorbar(h2_diff)
-    plt.xlabel(r"Difference in $S_1$(NPE)", size=11, labelpad=5)
-    plt.ylabel(r"Difference in log$(S_2/S_1)$", size=11, labelpad=5)
-    plt.title(r"GAN4DS-G4DS with log$(m)=%s$ for log$(S_2/S_1)$ vs $S_1$"%(massString))
+    cbar.set_label('Difference in counts', rotation=270)
+    plt.xlabel(r"$S_1$(NPE)", size=11, labelpad=5)
+    plt.ylabel(r"log$(S_2/S_1)$", size=11, labelpad=5)
+    plt.title(r"Difference between GAN4DS$-$"+"G4DS\n"+" with log$(m)=%s$ for log$(S_2/S_1)$ vs $S_1$"%(massString))
     plt.savefig('./final_result/discrimination_plots/'+massString+'/difference_s1_over_s2_vs_s1.png')
     plt.close()
 
@@ -264,9 +272,10 @@ def draw_physical_graphs(gan_data,gan_norms,mass):
     custom_cmap=plt.get_cmap("seismic")
     h1_diff= plt.pcolormesh(x_edges_1, y_edges_1,diff.T,norm=mpl.colors.Normalize(vmin=-1000,vmax=1000),cmap=custom_cmap)
     cbar= plt.colorbar(h1_diff)
-    plt.ylabel(r"Difference in $f_{200}$", size=11, labelpad=5, rotation="vertical")
-    plt.xlabel(r"Difference in $S_1$(NPE)", size=11, labelpad=5)
-    plt.title(r"GAN4DS-G4 with log$(m)=%s$ for $f_{200}$ vs $S_1$"%(massString))
+    cbar.set_label('Difference in counts', rotation=270)
+    plt.ylabel(r"$f_{200}$", size=11, labelpad=5, rotation="vertical")
+    plt.xlabel(r"$S_1$(NPE)", size=11, labelpad=5)
+    plt.title(r"Difference between GAN4DS$-$"+"G4DS\n"+" with log$(m)=%s$ for $f_{200}$ vs $S_1$"%(massString))
     plt.savefig('./final_result/discrimination_plots/'+massString+'/difference_f200_vs_s1.png')
     plt.close()
     plt.figure()
@@ -293,6 +302,63 @@ def draw_gan_output(training_ds,conditions,variables_of_interest):
             plt.title(varString+" for "+str(i)+" keV recoil energy")
             plt.savefig('./final_result/gan_output_2/'+var+'/'+var+'_'+str(i)+'.png')
             plt.close()
+
+def draw_best_gan(training_ds,conditions,variables_of_interest,energies):
+    cmap = mpl.cm.get_cmap('tab10')
+    norm = mpl.colors.Normalize(vmin=float(energies[0]), vmax=float(energies[-1]))
+    range_min=[0,0,0]
+    range_max=[2500,40000,0.8]
+    for num,var in enumerate(variables_of_interest):
+        varString=''
+        if(var=='s1'):
+            varString=r'$S_1$'
+        elif(var=='s2'):
+            varString=r'$S_2$'
+        else:
+            varString=r'$f_{200}$'
+        plt.title("Best GAN4DS vs G4DS for "+varString)
+        bins=np.linspace(range_min[num], range_max[num],201)
+        diff=[]
+        diff_bins=[]
+        for en in (0,120,-1):
+            x=np.array(conditions[num][en])
+            y=np.array(training_ds[en][var])
+            n1,bins1,p1=plt.hist(y, bins=bins,density = False,color=cmap(norm(float(energies[en]))), alpha = 0.4, label = "G4DS "+energies[en]+"keV")
+            n2,bins2,p2=plt.hist(x, bins=bins,density = False,color=cmap(norm(float(energies[en]))), alpha = 1, label = "GAN4DS "+energies[en]+"keV")
+            diff_bins.append(bins1)
+            #/np.array(n2+n1)
+            diff.append(n2-n1)
+        if(var!='f200like'):
+            plt.xlabel(varString+" (NPE)", size=11, labelpad=5)
+        else:
+            plt.xlabel(varString, size=11, labelpad=5)
+        plt.ylabel("Counts", size=11, labelpad=5, rotation="vertical")
+        plt.legend(loc="upper center", fontsize=11)
+        plt.savefig('./final_result/gan_output/best_'+var+'.png')
+        plt.close()
+
+        fig = plt.figure()
+        ax = fig.add_subplot(1,1,1)
+        for j,en in enumerate([0,120,-1]):
+            ax.bar(x=diff_bins[j][:-1],linewidth=0,height=diff[j],align='edge',color=cmap(norm(float(energies[en]))),width=(range_max[num]-range_min[num])/201,label = energies[en]+"keV")
+
+        ax.set_ylabel("Difference in counts", size=11, labelpad=2, rotation="vertical")
+        if(var!='f200like'):
+            ax.set_xlabel(varString+" (NPE)", size=11, labelpad=5)
+        else:
+            ax.set_xlabel(varString, size=11, labelpad=5)
+        plt.legend(loc="best", fontsize=11)
+        #ax.xaxis.set_label_position('top')
+        #ax.xaxis.tick_top()
+        #ax.spines['left'].set_position('zero')
+        #ax.spines['right'].set_color('none')
+        minimums=[-100,-45,-60]
+        ax.spines['bottom'].set_position(('data',minimums[num]))
+        #ax.spines['top'].set_color('none')
+        ax.grid(b=True)
+        ax.set_title(r"Difference between best GAN4DS $-$ G4DS for "+varString)
+        plt.savefig('./final_result/gan_output/difference_best_'+var+'.png')
+        plt.close()
 
 currentRun = "run_1_"
 currentSession = "session_1_"
@@ -327,6 +393,8 @@ training_ds = getData(energies_inputted, ['s1','s2','f200like'])
 
 for num,cond in enumerate(conditions):
     conditions[num]=[conditions[num][s]*allNorms[num][s] for s in range(len(energies_inputted))]
+
+#draw_best_gan(training_ds,conditions,['s1','s2','f200like'],energies)
 '''
 varString='s1'
 plt.scatter(np.arange(5,235,1),allNorms[0],s=1.5)
@@ -336,9 +404,37 @@ plt.title("Normalisation values for "+varString)
 plt.savefig('./final_result/g4ds_output/normalization_'+varString+'.png')
 plt.close()
 '''
+for num,var in enumerate(variables_of_interest):
+    varString=''
+    if(var=='s1'):
+        varString=r'$S_1$'
+    elif(var=='s2'):
+        varString=r'$S_2$'
+    else:
+        varString=r'$f_{200}$'
+    dat= pickle.load(open("in/datalogs/data_log_"+var, "rb"))
+    e=[epoch for epoch in range(0,10000) if epoch == 0 or (epoch+1) % 100 == 0]
+    del e[0]
+    y1=dat['metrics'][0]
+    y2=dat['metrics'][1]
+
+    plt.figure()
+    plt.plot(e,y1,color = 'blue')
+    plt.xlabel("Epoch", size=11, labelpad=5)
+    plt.ylabel("First Moment Ratio", size=11, labelpad=5, rotation="vertical")
+    plt.title(f"Disciminator First Moment Ratio for "+varString)
+    plt.savefig('./final_result/gan_output/moment_1_'+var+'.png')
+    plt.close()
+    plt.figure()
+    plt.plot(e,y2,color = 'blue')
+    plt.xlabel("Epoch", size=11, labelpad=5)
+    plt.ylabel("Second Moment Ratio", size=11, labelpad=5, rotation="vertical")
+    plt.title(f"Disciminator Second Moment Ratio for "+varString)
+    plt.savefig('./final_result/gan_output/moment_2_'+var+'.png')
+    plt.close()
 
 #draw_gan_output(training_ds,conditions,variables_of_interest)
-analyse_differences(training_ds,conditions,energies_inputted,['s1','s2','f200like'])
+#analyse_differences(training_ds,conditions,energies_inputted,['s1','s2','f200like'])
 '''
 variable="f200like"
 energy=100
