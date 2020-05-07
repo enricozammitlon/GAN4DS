@@ -404,6 +404,35 @@ plt.title("Normalisation values for "+varString)
 plt.savefig('./final_result/g4ds_output/normalization_'+varString+'.png')
 plt.close()
 '''
+plt.figure()
+for num,var in enumerate(variables_of_interest):
+    varString=''
+    if(var=='s1'):
+        varString=r'$S_1$'
+        style='-'
+    elif(var=='s2'):
+        varString=r'$S_2$'
+        style='--'
+    else:
+        varString=r'$f_{200}$'
+        style='-.'
+    dat= pickle.load(open("in/datalogs/data_log_"+var, "rb"))
+    e=[epoch for epoch in range(0,10000) if epoch == 0 or (epoch+1) % 100 == 0]
+    del e[0]
+    y1=dat['metrics'][0]
+    y2=dat['metrics'][1]
+    y3=dat['metrics'][2]
+    y4=dat['metrics'][3]
+    plt.plot(np.arange(1,10000,1),y3,color = 'orange',label='Accuracy '+varString,ls=style,linewidth=0.5)
+    plt.plot(np.arange(1,10000,1),y4,color = 'blue',label='Loss '+varString,ls=style,linewidth=1)
+
+plt.xlabel("Epoch", size=11, labelpad=5)
+plt.ylabel("Accuracy/Loss", size=11, labelpad=5, rotation="vertical")
+plt.title(f"Loss & Accuracy vs Epoch")
+plt.legend()
+plt.savefig('./final_result/gan_output/performance.png')
+plt.close()
+
 for num,var in enumerate(variables_of_interest):
     varString=''
     if(var=='s1'):
@@ -422,14 +451,14 @@ for num,var in enumerate(variables_of_interest):
     plt.plot(e,y1,color = 'blue')
     plt.xlabel("Epoch", size=11, labelpad=5)
     plt.ylabel("First Moment Ratio", size=11, labelpad=5, rotation="vertical")
-    plt.title(f"Disciminator First Moment Ratio for "+varString)
+    plt.title(f"First Moment Ratio for "+varString)
     plt.savefig('./final_result/gan_output/moment_1_'+var+'.png')
     plt.close()
     plt.figure()
     plt.plot(e,y2,color = 'blue')
     plt.xlabel("Epoch", size=11, labelpad=5)
     plt.ylabel("Second Moment Ratio", size=11, labelpad=5, rotation="vertical")
-    plt.title(f"Disciminator Second Moment Ratio for "+varString)
+    plt.title(f"Second Moment Ratio for "+varString)
     plt.savefig('./final_result/gan_output/moment_2_'+var+'.png')
     plt.close()
 
