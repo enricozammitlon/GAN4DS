@@ -257,25 +257,25 @@ def draw_physical_graphs(gan_data,gan_norms,mass):
     plt.savefig('./final_result/discrimination_plots/'+massString+'/gan_s1_over_s2_vs_s1.png')
     plt.close()
 
-    diff = (h2_gan - h2_training)
+    diff = 100*np.divide((h2_gan - h2_training), h2_training, out=np.zeros_like((h2_gan - h2_training)), where=h2_training!=0)
     custom_cmap=plt.get_cmap("seismic")
-    h2_diff= plt.pcolormesh(x_edges_2, y_edges_2,diff.T,norm=mpl.colors.Normalize(vmin=-1000,vmax=1000),cmap=custom_cmap)
+    h2_diff= plt.pcolormesh(x_edges_2, y_edges_2,diff.T,norm=mpl.colors.Normalize(vmin=-500,vmax=500),cmap=custom_cmap)
     cbar= plt.colorbar(h2_diff)
-    cbar.set_label('Difference in counts', rotation=270)
+    cbar.set_label('Percentage difference in counts', rotation=270, labelpad=10)
     plt.xlabel(r"$S_1$(NPE)", size=11, labelpad=5)
     plt.ylabel(r"log$(S_2/S_1)$", size=11, labelpad=5)
-    plt.title(r"Difference between GAN4DS$-$"+"G4DS\n"+" with log$(m)=%s$ for log$(S_2/S_1)$ vs $S_1$"%(massString))
+    plt.title(r"Percentage difference between (GAN4DS$-$"+"G4DS)/G4DS\n"+" with log$(m)=%s$ for log$(S_2/S_1)$ vs $S_1$"%(massString))
     plt.savefig('./final_result/discrimination_plots/'+massString+'/difference_s1_over_s2_vs_s1.png')
     plt.close()
 
-    diff = (h1_gan - h1_training)
+    diff = 100*np.divide((h1_gan - h1_training), h1_training, out=np.zeros_like((h1_gan - h1_training)), where=h1_training!=0)
     custom_cmap=plt.get_cmap("seismic")
-    h1_diff= plt.pcolormesh(x_edges_1, y_edges_1,diff.T,norm=mpl.colors.Normalize(vmin=-1000,vmax=1000),cmap=custom_cmap)
+    h1_diff= plt.pcolormesh(x_edges_1, y_edges_1,diff.T,norm=mpl.colors.Normalize(vmin=-500,vmax=500),cmap=custom_cmap)
     cbar= plt.colorbar(h1_diff)
-    cbar.set_label('Difference in counts', rotation=270)
+    cbar.set_label('Percentage difference in counts', rotation=270, labelpad=10)
     plt.ylabel(r"$f_{200}$", size=11, labelpad=5, rotation="vertical")
     plt.xlabel(r"$S_1$(NPE)", size=11, labelpad=5)
-    plt.title(r"Difference between GAN4DS$-$"+"G4DS\n"+" with log$(m)=%s$ for $f_{200}$ vs $S_1$"%(massString))
+    plt.title(r"Percentage difference (GAN4DS$-$"+"G4DS)/G4DS\n"+" with log$(m)=%s$ for $f_{200}$ vs $S_1$"%(massString))
     plt.savefig('./final_result/discrimination_plots/'+massString+'/difference_f200_vs_s1.png')
     plt.close()
     plt.figure()
@@ -363,7 +363,7 @@ def draw_best_gan(training_ds,conditions,variables_of_interest,energies):
 currentRun = "run_1_"
 currentSession = "session_1_"
 
-stream = open("/workspaces/mphys-project/G4_RUNS/serial_architecture/working_3D_cgan_s1_s2_f200/sessions/session_1_/layouts/config.yaml", "r+")
+stream = open("/workspaces/GAN4DS/G4_RUNS/serial_architecture/working_3D_cgan_s1_s2_f200/sessions/session_1_/layouts/config.yaml", "r+")
 data = yaml.load(stream, Loader=yaml.FullLoader)
 
 variables_of_interest = data['variables_of_interest']
@@ -484,10 +484,9 @@ plt.savefig('./final_result/g4ds_output/'+variable+'_'+str(energy)+'.png')
 '''
 masses=["1-5","2","2-5","3","4"]
 #masses=['1-5']
-'''
+
 for mass in masses:
     print("Current log-mass: %s"%(mass.replace('-','.')))
     conditions=all_stuff['data'].copy()
     allNorms=all_stuff['normalisation'].copy()
     draw_physical_graphs(conditions,allNorms,mass)
-'''
