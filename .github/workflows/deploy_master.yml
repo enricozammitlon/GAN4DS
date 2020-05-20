@@ -43,7 +43,15 @@ jobs:
       runs-on: [ubuntu-latest]
       steps:
       - name: Deploying to github registry
-        run: |
-          echo ${{ secrets.REGISTRY_TOKEN }} | docker login docker.pkg.github.com -u enricozammitlon --password-stdin
-          docker build --target analysis --cache-from docker.pkg.github.com/enricozammitlon/gan4ds/argan:analysis --pull -t docker.pkg.github.com/enricozammitlon/gan4ds/argan:analysis Dockerfile.devcontainer
-          docker push docker.pkg.github.com/enricozammitlon/gan4ds/argan:analysis
+        run: echo ${{ secrets.REGISTRY_TOKEN }} | docker login docker.pkg.github.com -u enricozammitlon --password-stdin
+
+      - uses: actions/checkout@master
+
+      - name: build
+        run: docker build --target runner --cache-from docker.pkg.github.com/enricozammitlon/gan4ds/argan:analysis --pull -t docker.pkg.github.com/enricozammitlon/gan4ds/argan:analysis Dockerfile.devcontainer
+
+      - name: push
+        run: docker push docker.pkg.github.com/enricozammitlon/gan4ds/argan:analysis
+
+      - name: logout
+        run: docker logout
