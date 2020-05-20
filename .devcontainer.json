@@ -1,0 +1,22 @@
+// For format details, see https://aka.ms/vscode-remote/devcontainer.json or the definition README at
+// https://github.com/microsoft/vscode-dev-containers/tree/master/containers/python-3
+{
+	"name": "GAN4DS",
+	"dockerFile": "Dockerfile.devcontainer",
+	"context": ".",
+	"settings": {
+		"terminal.integrated.shell.linux": "/bin/bash",
+		"python.pythonPath": "/usr/local/bin/python",
+		"python.linting.enabled": true,
+		"python.linting.pylintEnabled": true,
+		"python.linting.pylintPath": "/usr/local/bin/pylint"
+	},
+	"appPort": [
+		"6006:6006"
+	],
+	"postCreateCommand": "tensorboard --logdir Saves",
+	"remoteUser": "vscode",
+	"extensions": [
+		"ms-python.python"
+	]
+}

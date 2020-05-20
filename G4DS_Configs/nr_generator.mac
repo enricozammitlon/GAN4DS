@@ -1,0 +1,107 @@
+#sity of messages
+# options: debugging, development, trace, routine, warning, error
+# default: routine
+/ds/manager/log routine
+/ds/manager/verbosity 1
+#/ds/manager/checkoverlap 0
+/ds/manager/eventcounter 1000
+/ds/manager/writephotons 1
+/ds/manager/writedeposits 0
+/ds/manager/writedaughters 0
+#/ds/manager/scint_mass_fraction 0.0
+
+
+#  Detector configuration: 
+#  DS50  TPC+NV+WT (0) - DS50 TPC+NW (1) - DS50 TPC (2) - DS50 NV+WT (3) 
+#  LAr Tester (4) -  DS10 TPC (5) -  Scintillator tester (6)
+#  DSG2 TPC + NV + WT (7) - DSG3 TPC + NV (8) - DS5k TPC (9)
+#  DS20k TPC + WT (10)
+
+
+/ds/detector/configuration 11
+/ds/detector/ds20cryo_tpcEdge 150 cm
+/ds/detector/ds20cryo_tpcHeight 262 cm
+/ds/detector/ds20_AcrylicWalls_Thick 5 cm
+/ds/detector/ds20_LArBuffers_Thick 40 cm
+/ds/detector/ds20_VetoShell_Thick 10 cm
+/ds/detector/ds20_TPB_Thick 0.1 mm
+/ds/detector/ds20_TPB_Layers 1111
+#set the LAr scintillation yield in the veto either to 1 (there is scintillation) or to 0 (no light propagation) 
+#/ds/detector/vetoyieldfactor 0.0
+#to acrivate the placement of 3000 sipms (2000 inside, 1000 outside) set to any value > 0 the values below 
+#/ds/detector/ds20_buffer_coverageInside 0
+#/ds/detector/ds20_buffer_coverageOutside 0
+
+# Define output file name
+/run/filename dark_matter_100kev
+
+# Define  random seed
+#/run/heprandomseed 127667
+/run/autoSeed 1
+
+
+
+#Define the hadronic physics list (none QGSP_BERT_HP QGSP_BIC_HP FTF_BIC_HP FTFP_BERT_HP)
+/ds/physics/hadronic_list HP
+
+#Define the EM physics list (standard livermore)
+/ds/physics/em_list livermore
+
+#/ds/physics/optics 3
+
+/ds/physics/tuned200V   1
+/ds/physics/killS1S2 0
+/ds/physics/killS1 0
+/ds/physics/killS2 0
+
+
+#-----------------------------------
+/run/initialize
+#-----------------------------------
+
+#PostInit:
+
+
+/ds/generator/select G4Gun
+
+/ds/generator/particle  Ar40
+/ds/generator/energy  12345 keV
+
+/ds/generator/tpcdistribution 1 #uniformly distributed in the tpc
+#/ds/generator/bgd_reflector 1
+#/ds/generator/argonbufferinside 1
+#/ds/generator/argonbufferoutside 1
+#/ds/generator/plasticscintillator 1
+#/ds/generator/bgd_veto_sipm 1
+#/ds/generator/bgd_windows 
+#/ds/generator/bgd_pmt_photocathode
+#/ds/generator/liquidargon
+#/ds/generator/bgd_cryostats 1
+#/ds/generator/bgd_sipm 1
+#/ds/generator/bgd_pmt_stem 1
+#/ds/generator/bgd_rings 1
+#/ds/generator/bgd_grid 1
+#/ds/generator/gaspocketdistribution
+#/ds/generator/tpcdistribution 1
+
+#/ds/generator/energyfile  ../data/physics/DMRecoilSpectra/recoilData_m2-0_Arc1_-3.00.dat
+#/ds/generator/energyfile  ../data/physics/DMRecoilSpectra/recoilData_m2-0_Arc5_max.dat
+#/ds/generator/energyfile  ../data/physics/DMRecoilSpectra/recoilData_m2-0_Arc8_max.dat
+#/ds/generator/energyfile  ../data/physics/DMRecoilSpectra/recoilData_m2-0_Arc11_max.dat
+
+#/ds/generator/energyfile  ../data/physics/U238Teflon.dat
+#/ds/generator/energyfile ../data/physics/U238BoroSilicate.dat
+#/ds/generator/energyfile ../data/physics/Th232Teflon.dat
+#/ds/generator/energyfile ../data/physics/Th232StainlessSteel.dat
+#/ds/generator/energyfile ../data/physics/Th232FusedSilica.dat
+#/ds/generator/energyfile ../data/physics/Th232BoroSilicate.dat
+#/ds/generator/energyfile ../data/physics/U238U235Th232StainlessSteel.dat
+#/ds/generator/energyfile ../data/physics/U238Teflon.dat
+#/ds/generator/energyfile ../data/physics/U238StainlessSteel.dat
+#/ds/generator/energyfile ../data/physics/U238FusedSilica.dat
+
+
+
+# Define the number of events
+/run/beamOn 1000
+
