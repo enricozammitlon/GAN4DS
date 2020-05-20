@@ -44,6 +44,6 @@ jobs:
       steps:
       - name: Deploying to github registry
         run: |
-          echo ${{ secrets.GITHUB_REGISTRY_TOKEN }} | docker login docker.pkg.github.com -u enricozammitlon --password-stdin
+          echo ${{ secrets.REGISTRY_TOKEN }} | docker login docker.pkg.github.com -u enricozammitlon --password-stdin
           docker build --target analysis --cache-from docker.pkg.github.com/enricozammitlon/gan4ds/argan:analysis --pull -t docker.pkg.github.com/enricozammitlon/gan4ds/argan:analysis Dockerfile.devcontainer
           docker push docker.pkg.github.com/enricozammitlon/gan4ds/argan:analysis
