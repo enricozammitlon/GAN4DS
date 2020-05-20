@@ -44,11 +44,18 @@ jobs:
       runs-on: [ubuntu-latest]
       steps:
       - name: Deploying to github registry
-        run: |
-          echo ${{ secrets.GITHUB_REGISTRY_TOKEN }} | docker login docker.pkg.github.com -u enricozammitlon --password-stdin
-          docker build --target runner --cache-from docker.pkg.github.com/enricozammitlon/gan4ds/argan:runner --pull -t docker.pkg.github.com/enricozammitlon/gan4ds/argan:runner .
-          docker push docker.pkg.github.com/enricozammitlon/gan4ds/argan:runner
+        run: echo ${{ secrets.GITHUB_REGISTRY_TOKEN }} | docker login docker.pkg.github.com -u enricozammitlon --password-stdin
 
+      - uses: actions/checkout@master
+
+      - name: build
+        run: docker build --target runner --cache-from docker.pkg.github.com/enricozammitlon/gan4ds/argan:runner --pull -t docker.pkg.github.com/enricozammitlon/gan4ds/argan:runner .
+
+      - name: push
+        run: docker push docker.pkg.github.com/enricozammitlon/gan4ds/argan:runner
+
+      - name: logout
+        run: docker logout
   begin-training:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
