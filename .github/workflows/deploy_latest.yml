@@ -44,7 +44,7 @@ jobs:
       runs-on: [ubuntu-latest]
       steps:
       - name: Deploying to github registry
-        run: echo ${{ secrets.U_PASS }} | docker login docker.pkg.github.com -u enricozammitlon --password-stdin
+        run: echo ${{ secrets.GITHUB_REGISTRY_TOKEN }} | docker login docker.pkg.github.com -u enricozammitlon --password-stdin
 
       - uses: actions/checkout@master
 
