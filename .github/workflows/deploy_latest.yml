@@ -77,7 +77,7 @@ jobs:
           cd /hepgpu5-data1/${{ secrets.USERNAME }}/GAN4DS
           git pull origin deploys
           cd Training
-          rm -f gan4ds_argan-runner.sif
+          rm -f gan4ds.out gan4ds.err
           rm -rf out/*
           chmod +x start_running.sh
-          bash start_running.sh
+          ./start_running.sh
