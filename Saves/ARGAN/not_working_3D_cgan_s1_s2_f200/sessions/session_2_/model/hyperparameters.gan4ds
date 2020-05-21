@@ -1,0 +1,12 @@
+d_beta1	0.3
+d_training_rate	0.0005
+dimensionality	1
+dir_output	out//run_1_/sessions/session_2_
+epochCheck	100
+gan_beta1	0.3
+gan_training_rate	0.0005
+layout_dir	layouts/s1
+logdir	out//run_1_/sessions/session_2_/model/logs/
+noise	1000
+overrides	{'d_nodes': 15, 'g_nodes': 65, 'dropout': 0.2}
+tensorboard	<tensorflow.python.keras.callbacks.TensorBoard object at 0x7f088d39de48>

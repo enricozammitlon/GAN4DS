@@ -1,4 +1,4 @@
-# This is a basic workflow to help you get started with Actions
+# This is a basic action that sends an email when the job is done
 
 name: Check Status
 
@@ -6,7 +6,7 @@ name: Check Status
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '*/30 * * * *'
+    - cron:  '1 */6 * * *'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -24,9 +24,9 @@ jobs:
         port: ${{ secrets.PORT }}
         script_stop: true
         script: |
-          cd /hepgpu5-data1/ricozl/ricozl/mphys-project/Standalone/
+          cd /${{ secrets.HOST }}-data1/${{ secrets.USERNAME }}/GAN4DS/Training/
           bash check_if_done.sh
-          
+
     - name: Send email
       uses: dawidd6/action-send-mail@master
       with:
@@ -41,7 +41,7 @@ jobs:
         # Subject of mail message
         subject: Scheduled job on HEPGPU5 Done
         # Body of mail message (might be a filename to read from)
-        body: Hi masters! Your job is done on hepgpu5. Better get crunchin on those numbers. Your bot.
+        body: Hi! Your GAN has finished training on hepgpu5. Your ML bot.
         # Recipients mail addresses (separated with comma)
         to: enrico.zammitl@gmail.com,krishattack@gmail.com
         # Full name of mail sender
