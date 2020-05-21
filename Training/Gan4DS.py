@@ -69,6 +69,8 @@ for override in overrides:
             current_lim.append(param)
         hyperparams_limits.append(current_lim)
 # Load in the initial training data
+if not exists('out/'):
+    makedirs('out/')
 pre = Preprocessor(idir='in/pickles',
                    variables=variables_of_interest, en=energies)
 # Save plots of what training data looks like
