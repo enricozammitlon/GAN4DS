@@ -80,4 +80,4 @@ jobs:
           rm -f gan4ds.out gan4ds.err
           rm -rf out/*
           chmod +x start_running.sh
-          ./start_running.sh
+          bash start_running.sh
