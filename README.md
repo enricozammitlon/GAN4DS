@@ -1,31 +1,14 @@
 # MPhys Project
 For all documentation please check the Wiki tab on Github.
 
-Current Status of deployment (Green means the job has been dispatched to hepgpu5): ![Run HepGPU](https://github.com/enricozammitlon/mphys-project/workflows/Run%20HepGPU/badge.svg?branch=deploys)
-Is the run on hepgpu5 ready? (Red means it is still running):![Check Status](https://github.com/enricozammitlon/mphys-project/workflows/Check%20Status/badge.svg?branch=master&event=schedule)
+To start the training runner using docker:
+* `git clone` this repository
+* `docker pull enricozl/gan4ds:argan-runnerr`
+* `docker run --mount type=bind,source=<Insert here absolute path>/GAN4DS/Training,target=/Training -p 0.0.0.0:6006:6006 enricozl/gan4ds:argan-runner`
 
-Later on include this in the actions github
-
-  validating-yaml-files:
-    runs-on: [ubuntu-latest]
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Setup Python environment
-      uses: actions/setup-python@v1.1.1
-
-    - name: Install pykwalify
-      run: |
-        pip3 install pykwalify PyYAML
-    - name: General Config Validation
-      run: |
-        cd Standalone/tests
-        pwd
-        python3 config_test.py
-    - name: Discriminator Layout Validation
-      run: |
-        cd Standalone/tests
-        pwd
-        python3 discriminator_test.py
-        python3 config_test.py
-        python3 generator_test.py
+To start developing using docker:
+* Download VS Code
+* Download the ms-vscode-remote.remote-containers extension
+* From the extension tab (or by shift+cmd P) click `Open folder in container`
+* Find the GAN4DS repistory folder
+* Wait for everything to laod and you can start developing

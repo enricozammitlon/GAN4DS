@@ -43,16 +43,16 @@ jobs:
   deploying-latest:
       runs-on: [ubuntu-latest]
       steps:
-      - name: Deploying to github registry
-        run: echo ${{ secrets.REGISTRY_TOKEN }} | docker login docker.pkg.github.com -u enricozammitlon --password-stdin
+      - name: Logging in to github registry
+        run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u enricozl --password-stdin
 
       - uses: actions/checkout@master
 
       - name: build
-        run: docker build --target runner --cache-from docker.pkg.github.com/enricozammitlon/gan4ds/argan:runner --pull -t docker.pkg.github.com/enricozammitlon/gan4ds/argan:runner .
+        run: docker build --target runner --cache-from enricozl/gan4ds:argan-runner --pull -t enricozl/gan4ds:argan-runner .
 
       - name: push
-        run: docker push docker.pkg.github.com/enricozammitlon/gan4ds/argan:runner
+        run: docker push enricozl/gan4ds:argan-runner
 
       - name: logout
         run: docker logout
@@ -74,6 +74,9 @@ jobs:
         port: ${{ secrets.PORT }}
         script_stop: true
         script: |
+          export SINGULARITY_DOCKER_USERNAME=enricozl
+          export SINGULARITY_DOCKER_PASSWORD=${{ secrets.DOCKER_TOKEN }}
           cd /${{ secrets.HOST }}-data1/${{ secrets.USERNAME }}/
-          singularity pull docker://docker.pkg.github.com/enricozammitlon/gan4ds/argan:runner
-          nohup singularity run --nv docker://docker.pkg.github.com/enricozammitlon/gan4ds/argan:runner
+          rm -f argan_runner.sif
+          SINGULARITY_DISABLE_CACHE=True singularity pull docker://enricozl/gan4ds:argan-runner
+          nohup singularity run --nv --bind /${{ secrets.HOST }}-data1/${{ secrets.USERNAME }}/GAN4DS/Training:/Training argan_runner.sif > gan4ds.out 2> gan4ds.err < /dev/null
