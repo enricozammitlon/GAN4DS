@@ -18,7 +18,7 @@ import pickle
 
 # Spin up tensorboard to be able to monitor output on localhost:6006
 # Use  -L 16006:localhost:6006 with ssh to be able to see it in your browser
-process = subprocess.Popen(['tensorboard', '--logdir', 'out/'])
+process = subprocess.Popen(['tensorboard','--bind_all' ,'--logdir', '/Training/out'])
 # Load in the configuration variables like epochs, epoch check + overrides
 stream = open("./layouts/config.yaml", "r+")
 data = yaml.load(stream, Loader=yaml.FullLoader)
