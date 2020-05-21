@@ -48,7 +48,7 @@ jobs:
       - uses: actions/checkout@master
 
       - name: build
-        run: docker build --target runner --cache-from docker.pkg.github.com/enricozammitlon/gan4ds/argan:analysis --pull -t docker.pkg.github.com/enricozammitlon/gan4ds/argan:analysis Dockerfile.devcontainer
+        run: docker build --target analysis --cache-from docker.pkg.github.com/enricozammitlon/gan4ds/argan:analysis --pull -t docker.pkg.github.com/enricozammitlon/gan4ds/argan:analysis Dockerfile.devcontainer
 
       - name: push
         run: docker push docker.pkg.github.com/enricozammitlon/gan4ds/argan:analysis
