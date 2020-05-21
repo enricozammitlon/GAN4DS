@@ -76,7 +76,9 @@ jobs:
         script: |
           export SINGULARITY_DOCKER_USERNAME=enricozl
           export SINGULARITY_DOCKER_PASSWORD=${{ secrets.DOCKER_TOKEN }}
-          cd /${{ secrets.HOST }}-data1/${{ secrets.USERNAME }}/
-          rm -f argan_runner.sif
+          cd /${{ secrets.HOST }}-data1/${{ secrets.USERNAME }}/GAN4DS
+          git pull origin deploys
+          cd Training
+          rm -f gan4ds_argan-runner.sif
           SINGULARITY_DISABLE_CACHE=True singularity pull docker://enricozl/gan4ds:argan-runner
-          nohup singularity run --nv --bind /${{ secrets.HOST }}-data1/${{ secrets.USERNAME }}/GAN4DS/Training:/Training argan_runner.sif > gan4ds.out 2> gan4ds.err < /dev/null
+          nohup singularity run --nv --bind /${{ secrets.HOST }}-data1/${{ secrets.USERNAME }}/GAN4DS/Training:/Training gan4ds_argan-runner.sif > gan4ds.out 2> gan4ds.err < /dev/null
