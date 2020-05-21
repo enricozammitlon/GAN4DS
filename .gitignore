@@ -6,3 +6,4 @@ __pycache__
 gan4ds.err
 gan4ds.out
 !*.gitignore
+gan4ds_argan-runner.sif
