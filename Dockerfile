@@ -1,6 +1,8 @@
 FROM tensorflow/tensorflow:2.1.0-gpu-py3 AS runner
 COPY ./Training/deployment_requirements.txt /tmp/pip-tmp/
-RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/deployment_requirements.txt
+RUN apt-get update -qq && apt-get -y install \
+   && apt-get install -y ffmpeg \
+   && pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/deployment_requirements.txt
 ENV ADDR=0.0.0.0
 EXPOSE 6006
 RUN mkdir /Training
