@@ -88,7 +88,7 @@ class NeuralNetworkTraining:
             batches.append(single_batch)
         batches=np.concatenate(batches)
 
-        hyperparams = np.concatenate([np.full(fill_value=235.-float(a), shape=(self.batch_size, 1)) for a in self.energies])
+        hyperparams = np.concatenate([np.full(fill_value=float(a), shape=(self.batch_size, 1)) for a in self.energies])
         all_hyperparams=[hyperparams]
 
         for param in self.conditions:
@@ -103,7 +103,7 @@ class NeuralNetworkTraining:
     # Create noise vectors to be fed to generator. These need to be in the same
     # size and shape of training DS
     def get_noise (self) :
-        hyperparams = np.concatenate([np.full(fill_value=235.-float(a), shape=(self.batch_size, 1)) for a in self.energies])
+        hyperparams = np.concatenate([np.full(fill_value=float(a), shape=(self.batch_size, 1)) for a in self.energies])
         all_hyperparams=[hyperparams]
         noise = np.random.normal(size=(len(self.training_ds)*self.batch_size, self.noise_size))
         for param in self.conditions:
@@ -208,6 +208,10 @@ class NeuralNetworkTraining:
             W = np.concatenate([np.ones(shape=(len(self.energies)*self.batch_size,)), np.full(fill_value=1, shape=(len(self.energies)*self.batch_size,))])
 
             self.layout.d.trainable = True
+            d_loss, d_acc = self.layout.d.train_on_batch(all_Xh, Y, sample_weight=W)
+            d_loss, d_acc = self.layout.d.train_on_batch(all_Xh, Y, sample_weight=W)
+            d_loss, d_acc = self.layout.d.train_on_batch(all_Xh, Y, sample_weight=W)
+            d_loss, d_acc = self.layout.d.train_on_batch(all_Xh, Y, sample_weight=W)
             d_loss, d_acc = self.layout.d.train_on_batch(all_Xh, Y, sample_weight=W)
 
 
