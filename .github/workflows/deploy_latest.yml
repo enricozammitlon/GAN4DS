@@ -49,7 +49,7 @@ jobs:
       - uses: actions/checkout@master
 
       - name: build
-        run: docker build --target runner --cache-from enricozl/gan4ds:argan-runner --pull -t enricozl/gan4ds:argan-runner .
+        run: docker build --target runner --cache-from enricozl/gan4ds:argan-runner --pull -t enricozl/gan4ds:argan-runner ./Training
 
       - name: push
         run: docker push enricozl/gan4ds:argan-runner
