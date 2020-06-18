@@ -368,7 +368,7 @@ def draw_best_gan(training_ds,conditions,variables_of_interest,energies):
 currentRun = "run_1_"
 currentSession = "session_1_"
 
-stream = open("../Saves/ARGAN/working_3D_cgan_235-e_s1_s2_f200/sessions/session_1_/layouts/config.yaml", "r+")
+stream = open("../Saves/ARGAN/working_3D_cgan_235-e_s1_s2_f200/run_1_/sessions/session_1_/layouts/config.yaml", "r+")
 data = yaml.load(stream, Loader=yaml.FullLoader)
 
 variables_of_interest = data['variables_of_interest']
