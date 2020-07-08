@@ -4,7 +4,7 @@ variables_of_interest:
   - "f200like"
 energies:
   range:
-    - 5
+    - 100
     - 235
 epochs:
   10000
