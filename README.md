@@ -73,11 +73,11 @@ on 6006 for an interactive tensorboard session.
    1. Move to `cd /pc20xx-dataX/<your-username>/`
    2. Create the virtual environment via `python3 -m venv py3.6`
    3. Activate the environment via `source ./py3.6/bin/activate`
-   4. Now move to the location of the python scripts `cd /pc20xx-dataX/<your-username>/mphys-project/Standalone`
-   5. Install dependencies via `pip3 install -r deployment_requirements.txt`
-   6. Install TensorRT dependencies by going to `cd /pc20xx-dataX/<your-username>/CUDA/TensorRT<your-version>/`
-   7. In the directory 'graphsurgeon' run `pip3 install graphsurgeon-<your-version>.whl`
-   8. In the directory 'uff' run `pip3 install uff-<your-version>.whl`
+   4. Install TensorRT dependencies by going to `cd /pc20xx-dataX/<your-username>/CUDA/TensorRT<your-version>/`
+   5. In the directory 'graphsurgeon' run `pip3 install graphsurgeon-<your-version>.whl`
+   6. In the directory 'uff' run `pip3 install uff-<your-version>.whl`
+   7. Now move to the location of the python scripts `cd /pc20xx-dataX/<your-username>/mphys-project/Standalone`
+   8. Install dependencies via `pip3 install -r deployment_requirements.txt`
 
 ### 5. Testing installation and cloning the repository
    1. Move to `cd /pc20xx-dataX/<your-username>/`
