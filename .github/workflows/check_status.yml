@@ -1,49 +1,50 @@
+
 # This is a basic action that sends an email when the job is done
 
-name: Check Status
+#name: Check Status
 
 # Controls when the action will run.
-on:
-  schedule:
-    # * is a special character in YAML so you have to quote this string
-    - cron:  '1 */6 * * *'
+#on:
+#  schedule:
+#    # * is a special character in YAML so you have to quote this string
+#    - cron:  '1 */6 * * *'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
+#jobs:
   # This workflow contains a single job called "build"
-  check-if-done:
+#  check-if-done:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checking if process is done
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        port: ${{ secrets.PORT }}
-        script_stop: true
-        script: |
-          cd /${{ secrets.HOST }}-data1/${{ secrets.USERNAME }}/GAN4DS/Training/
-          bash check_if_done.sh
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: Checking if process is done
+#      uses: appleboy/ssh-action@master
+#      with:
+#        host: ${{ secrets.HOST }}
+#        username: ${{ secrets.USERNAME }}
+#        password: ${{ secrets.PASSWORD }}
+#        port: ${{ secrets.PORT }}
+#        script_stop: true
+#        script: |
+#          cd /${{ secrets.HOST }}-data1/${{ secrets.USERNAME }}/GAN4DS/Training/
+#          bash check_if_done.sh
 
-    - name: Send email
-      uses: dawidd6/action-send-mail@master
-      with:
-        # SMTP server address
-        server_address: smtp.gmail.com
-        # SMTP server port
-        server_port: 465
-        # Authenticate as this user to SMTP server
-        username: ${{ secrets.EMAIL_UNAME }}
-        # Authenticate with this password to SMTP server
-        password: ${{ secrets.EMAIL_PASS }}
-        # Subject of mail message
-        subject: Scheduled job on HEPGPU5 Done
-        # Body of mail message (might be a filename to read from)
-        body: Hi! Your GAN has finished training on hepgpu5. Your ML bot.
-        # Recipients mail addresses (separated with comma)
-        to: enrico.zammitl@gmail.com,krishattack@gmail.com
-        # Full name of mail sender
-        from: Rico's Bot
-        # Content-Type HTTP header (MIME type)
+#    - name: Send email
+#      uses: dawidd6/action-send-mail@master
+#      with:
+#        # SMTP server address
+#        server_address: smtp.gmail.com
+#        # SMTP server port
+#        server_port: 465
+#        # Authenticate as this user to SMTP server
+#        username: ${{ secrets.EMAIL_UNAME }}
+#        # Authenticate with this password to SMTP server
+#        password: ${{ secrets.EMAIL_PASS }}
+#        # Subject of mail message
+#        subject: Scheduled job on HEPGPU5 Done
+#        # Body of mail message (might be a filename to read from)
+#        body: Hi! Your GAN has finished training on hepgpu5. Your ML bot.
+#        # Recipients mail addresses (separated with comma)
+#        to: enrico.zammitl@gmail.com,krishattack@gmail.com
+#        # Full name of mail sender
+#        from: Rico's Bot
+#        # Content-Type HTTP header (MIME type)
