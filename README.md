@@ -86,7 +86,7 @@ on 6006 for an interactive tensorboard session.
    4. `cd mphys-project/Standalone`
    5. Here you can run `python3 gpu_test.py` and in the output it should say
       > Executing op MatMul in device /job:localhost/replica:0/task:0/device:GPU:0
-   6. Run `python3 Gan4DS.py` to run the package
+   6. Run `nohup python3 -u Gan4DS.py > gan4ds.out 2> gan4ds.err < /dev/null &` to run the package
 
 [1]:http://rpm.pbone.net/index.php3/stat/3/limit/9/srodzaj/1/dl/40/search/libcuda.so.1()(64bit)/field[]/1/field[]/2
 ## Folder Structure Explained

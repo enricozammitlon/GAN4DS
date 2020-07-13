@@ -3,6 +3,9 @@ out/
 .DS_Store
 __pycache__
 *.root
+CUDA/
+Installation/build
+Installation/py3.6
 gan4ds.err
 gan4ds.out
 !*.gitignore
