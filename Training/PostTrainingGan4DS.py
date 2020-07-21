@@ -367,9 +367,9 @@ def draw_best_gan(training_ds,conditions,variables_of_interest,energies):
         plt.close()
 
 currentRun = "run_1_"
-currentSession = "session_1_"
+currentSession = "session_2_"
 
-stream = open("../Saves/ARGAN/working_3D_simple_cgan_s1_s2_f200/sessions/session_1_/layouts/config.yaml", "r+")
+stream = open("../Saves/ARGAN/working_3D_cgan_s1_s2_f200_v2/sessions/session_2_/layouts/config.yaml", "r+")
 data = yaml.load(stream, Loader=yaml.FullLoader)
 
 variables_of_interest = data['variables_of_interest']
@@ -412,7 +412,7 @@ for en in energies_inputted:
 for num,cond in enumerate(conditions):
     conditions[num]=[conditions[num][s]*allNorms[num][s] for s in range(len(energies_inputted))]
 
-#draw_best_gan(training_ds,conditions,['s1','s2','f200like'],energies)
+draw_best_gan(training_ds,conditions,['s1','s2','f200like'],energies)
 '''
 varString='s1'
 plt.scatter(np.arange(5,235,1),allNorms[0],s=1.5)
@@ -481,8 +481,8 @@ for num,var in enumerate(variables_of_interest):
     plt.savefig('./final_result/gan_output/moment_2_'+var+'.png')
     plt.close()
 '''
-#draw_gan_output(training_ds,conditions,variables_of_interest)
-#analyse_differences(training_ds,conditions,energies_inputted,['s1','s2','f200like'])
+draw_gan_output(training_ds,conditions,variables_of_interest)
+analyse_differences(training_ds,conditions,energies_inputted,['s1','s2','f200like'])
 '''
 variable="f200like"
 energy=100
