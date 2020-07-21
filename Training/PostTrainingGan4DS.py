@@ -188,16 +188,15 @@ def normaliseData(training_ds, energies, variables_of_interest):
             normalisation.append(temp_maximum)
     return normalisation
 
-def draw_physical_graphs(gan_data,gan_norms,mass):
+def draw_physical_graphs(gan_data,mass):
     conditions=gan_data.copy()
-    allNorms=gan_norms.copy()
     selected_energies=get_distributed_energies(mass)
-
     massString=mass.replace('-','.')
     if not exists('./final_result/discrimination_plots/'+massString):
         makedirs('./final_result/discrimination_plots/'+massString)
+
     for num in range(len(conditions)):
-        conditions[num]=[conditions[num][s]*allNorms[num][s] for s in selected_energies]
+        conditions[num]=[conditions[num][s-5] for s in selected_energies]
 
     training_ds = getData([str(e) for e in selected_energies], ['s1','s2','f200like'])
 
@@ -208,7 +207,8 @@ def draw_physical_graphs(gan_data,gan_norms,mass):
         x.append(training_ds[i]['s1'])
     y = np.concatenate(y)
     x = np.concatenate(x)
-
+    print("Size of training x %d"%len(x))
+    print("Size of training y %d"%len(y))
     h1_training,x_edges_1,y_edges_1,im= plt.hist2d(x, y,range= [[0, 600], [0.2, 1]],bins=[100,100],norm=mpl.colors.LogNorm(),cmap=plt.get_cmap("jet"))
     plt.colorbar(im)
     plt.ylabel(r"$f_{200}$", size=11, labelpad=5, rotation="vertical")
@@ -222,7 +222,8 @@ def draw_physical_graphs(gan_data,gan_norms,mass):
     x = np.array(conditions[0])
     y = np.concatenate(y)
     x = np.concatenate(x)
-
+    print("Size of gan x %d"%len(x))
+    print("Size of gan y %d"%len(y))
     h1_gan,x_edges_1,y_edges_1,im= plt.hist2d(x,y,range= [[0, 600], [0.2, 1]],bins=[100,100],norm=mpl.colors.LogNorm(),cmap=plt.get_cmap("jet"))
     plt.colorbar(im)
     plt.ylabel(r"$f_{200}$", size=11, labelpad=5, rotation="vertical")
@@ -368,7 +369,7 @@ def draw_best_gan(training_ds,conditions,variables_of_interest,energies):
 currentRun = "run_1_"
 currentSession = "session_1_"
 
-stream = open("../Saves/ARGAN/working_3D_cgan_235-e_s1_s2_f200/run_1_/sessions/session_1_/layouts/config.yaml", "r+")
+stream = open("../Saves/ARGAN/working_3D_simple_cgan_s1_s2_f200/sessions/session_1_/layouts/config.yaml", "r+")
 data = yaml.load(stream, Loader=yaml.FullLoader)
 
 variables_of_interest = data['variables_of_interest']
@@ -411,7 +412,7 @@ for en in energies_inputted:
 for num,cond in enumerate(conditions):
     conditions[num]=[conditions[num][s]*allNorms[num][s] for s in range(len(energies_inputted))]
 
-draw_best_gan(training_ds,conditions,['s1','s2','f200like'],energies)
+#draw_best_gan(training_ds,conditions,['s1','s2','f200like'],energies)
 '''
 varString='s1'
 plt.scatter(np.arange(5,235,1),allNorms[0],s=1.5)
@@ -480,8 +481,8 @@ for num,var in enumerate(variables_of_interest):
     plt.savefig('./final_result/gan_output/moment_2_'+var+'.png')
     plt.close()
 '''
-draw_gan_output(training_ds,conditions,variables_of_interest)
-analyse_differences(training_ds,conditions,energies_inputted,['s1','s2','f200like'])
+#draw_gan_output(training_ds,conditions,variables_of_interest)
+#analyse_differences(training_ds,conditions,energies_inputted,['s1','s2','f200like'])
 '''
 variable="f200like"
 energy=100
@@ -505,7 +506,9 @@ masses=["1-5","2","2-5","3","4"]
 
 for mass in masses:
     print("Current log-mass: %s"%(mass.replace('-','.')))
+    '''
     for en in energies_inputted:
         for varNum,var in enumerate(variables_of_interest):
             conditions[varNum].append(all_stuff[var]['data'][en][var])
-    draw_physical_graphs(conditions,allNorms,mass)
+    '''
+    draw_physical_graphs(conditions,mass)
