@@ -30,7 +30,7 @@ def main(argv):
     print(inputFolder)
     print(outputFolder)
     print(variables)
-    allFiles = [f for f in listdir(inputFolder) if isfile(join(inputFolder, f))]
+    allFiles = [f for f in listdir(inputFolder) if isfile(join(inputFolder, f)) and '.root' in f]
     if not exists(outputFolder):
         makedirs(outputFolder)
     for file in allFiles:
