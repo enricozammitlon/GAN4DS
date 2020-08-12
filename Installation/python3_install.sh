@@ -1,5 +1,5 @@
-INSTALL_BASE_PATH="/hepgpuX-dataY/<YOUR USERNAME>/python3.6.10"
-cd /hepgpuX-dataY/<YOUR USERNAME>/
+INSTALL_BASE_PATH="/hepgpu3-data2/ricozl/GAN4DS/python3.6.10"
+cd /hepgpu3-data2/ricozl/GAN4DS
 mkdir build
 cd build
 [ -f Python-3.6.10.tgz ] || wget https://www.python.org/ftp/python/3.6.10/Python-3.6.10.tgz
@@ -22,7 +22,7 @@ LD_RUN_PATH=${INSTALL_BASE_PATH}/lib make
 make
 make install
 
-cd /hepgpuX-dataY/<YOUR USERNAME>/
+cd /hepgpu3-data2/ricozl/GAN4DS
 LINE_TO_ADD="export PATH=${INSTALL_BASE_PATH}/bin:\$PATH"
 if grep -q -v "${LINE_TO_ADD}" $HOME/.bash_profile; then echo "${LINE_TO_ADD}" >> $HOME/.bash_profile; fi
 source $HOME/.bash_profile
