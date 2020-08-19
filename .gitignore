@@ -6,6 +6,7 @@ __pycache__
 CUDA/
 Installation/build
 Installation/py3.6
+Installation/python3.6.10/
 gan4ds.err
 gan4ds.out
 !*.gitignore
