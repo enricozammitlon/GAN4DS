@@ -1,5 +1,5 @@
 awkward==0.12.20
 cachetools==4.0.0
-numpy==1.18.2
+numpy==1.22.0
 uproot==3.11.3
 uproot-methods==0.7.3
